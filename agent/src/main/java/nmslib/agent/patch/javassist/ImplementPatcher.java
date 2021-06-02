@@ -142,8 +142,6 @@ public final class ImplementPatcher implements JavassistClassPatcher {
                 methodInfo.setCodeAttribute(code.toCodeAttribute());
 
                 cls.addMethod(CtMethod.make(methodInfo, cls));
-                cls.writeFile("code");
-                cls.defrost();
             }
         }
     }
