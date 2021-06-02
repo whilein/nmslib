@@ -19,6 +19,7 @@ package nmslib.agent.patch;
 import nmslib.agent.AgentContext;
 import nmslib.agent.name.Name;
 import nmslib.agent.patch.javassist.JavassistClassPatcher;
+import nmslib.agent.patch.proxy.ProxyTarget;
 
 /**
  * @author whilein
@@ -30,6 +31,8 @@ public interface PatchClass {
     PatchClass patch(JavassistClassPatcher patcher);
 
     PatchClass proxyMethod(String name, String proxyName);
+    PatchClass proxyMethod(ProxyTarget name, String proxyName);
+
     PatchClass fieldSetter(String field, String setter);
     PatchClass fieldGetter(String field, String getter);
     PatchClass fieldSetter(String field);

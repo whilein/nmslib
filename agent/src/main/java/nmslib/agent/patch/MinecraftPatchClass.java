@@ -24,6 +24,8 @@ import lombok.val;
 import nmslib.agent.AgentContext;
 import nmslib.agent.name.Name;
 import nmslib.agent.patch.javassist.*;
+import nmslib.agent.patch.proxy.MethodNameProxyTarget;
+import nmslib.agent.patch.proxy.ProxyTarget;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedHashSet;
@@ -65,7 +67,15 @@ public final class MinecraftPatchClass implements PatchClass {
             final String name,
             final String proxyName
     ) {
-        return patch(ProxyPatcher.create(name, proxyName));
+        return proxyMethod(MethodNameProxyTarget.create(name), proxyName);
+    }
+
+    @Override
+    public PatchClass proxyMethod(
+            final ProxyTarget target,
+            final String proxyName
+    ) {
+        return patch(ProxyPatcher.create(target, proxyName));
     }
 
     @Override

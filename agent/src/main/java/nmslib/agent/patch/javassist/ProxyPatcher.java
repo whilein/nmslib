@@ -17,13 +17,16 @@
 package nmslib.agent.patch.javassist;
 
 import javassist.CtClass;
+import javassist.CtMethod;
 import javassist.CtNewMethod;
+import javassist.NotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import nmslib.agent.AgentContext;
 import nmslib.agent.name.ClassName;
+import nmslib.agent.patch.proxy.ProxyTarget;
 
 /**
  * @author whilein
@@ -32,14 +35,23 @@ import nmslib.agent.name.ClassName;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProxyPatcher implements JavassistClassPatcher {
 
-    String originalMethodName;
+    ProxyTarget originalMethodName;
     String proxiedMethodName;
 
     public static JavassistClassPatcher create(
-            final String name,
+            final ProxyTarget target,
             final String proxyName
     ) {
-        return new ProxyPatcher(name, proxyName);
+        return new ProxyPatcher(target, proxyName);
+    }
+
+    private CtMethod searchMethod(final CtClass cls) throws NotFoundException {
+        for (val method : cls.getDeclaredMethods()) {
+            if (originalMethodName.matches(method.getReturnType(), method.getParameterTypes(), method.getName()))
+                return method;
+        }
+
+        return null;
     }
 
     @Override
@@ -47,7 +59,13 @@ public final class ProxyPatcher implements JavassistClassPatcher {
         val current = ctx.getCurrent();
         val proxies = ctx.getProxyRegistry();
 
-        val original = current.getDeclaredMethod(originalMethodName);
+        val original = searchMethod(current);
+
+        if (original == null) {
+            throw new IllegalStateException("No method found for patch: " + originalMethodName
+                    + " in " + current.getName());
+        }
+
         val originalReturnType = original.getReturnType();
         val originalParameters = original.getParameterTypes();
 
@@ -70,15 +88,8 @@ public final class ProxyPatcher implements JavassistClassPatcher {
         val body = new StringBuilder();
         body.append("public ").append(returnType.getName()).append(' ').append(proxiedMethodName).append('(');
 
-        boolean hasParams = false;
-
         for (int i = 0; i < originalParameters.length; i++) {
-            if (hasParams) {
-                body.append(", ");
-            } else {
-                hasParams = true;
-            }
-
+            if (i != 0) body.append(", ");
             body.append(proxiedParameters[i].getName()).append(' ').append("__var").append(i);
         }
 
@@ -87,16 +98,10 @@ public final class ProxyPatcher implements JavassistClassPatcher {
         if (returnType != originalReturnType)
             body.append('(').append(returnType.getName()).append(')');
 
-        body.append("this.").append(originalMethodName).append('(');
-
-        hasParams = false;
+        body.append("this.").append(originalMethodName.getMethodName()).append('(');
 
         for (int i = 0; i < originalParameters.length; i++) {
-            if (hasParams) {
-                body.append(", ");
-            } else {
-                hasParams = true;
-            }
+            if (i != 0) body.append(", ");
 
             if (proxiedParameters[i] != originalParameters[i])
                 body.append('(').append(originalParameters[i].getName()).append(')');
