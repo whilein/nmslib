@@ -68,12 +68,11 @@ public final class FactoryPatcher implements JavassistClassPatcher {
 
             for (int i = 0; i < params.length; i++) {
                 if (i != 0) sb.append(',');
-                sb.append('(').append(proxiedParams[i]).append(")$").append(i);
+                sb.append('(').append(proxiedParams[i]).append(")$").append(i+1);
             }
 
             sb.append("); }");
 
-            System.out.println(method.getDeclaringClass().getName() + "#" + method.getName() + " = " + sb);
             method.setBody(sb.toString());
         }
     }
