@@ -1,0 +1,4 @@
+name: NmsLib
+main: nmslib.Main
+version: ${version}
+author: Whilein

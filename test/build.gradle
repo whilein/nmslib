@@ -1,0 +1,8 @@
+dependencies {
+    compileOnly project(":api")
+}
+
+shadowJar {
+    destinationDirectory = file("$rootDir/output")
+    archiveFileName = "nmslib-test.jar"
+}

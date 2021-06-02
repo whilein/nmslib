@@ -1,0 +1,5 @@
+rootProject.name = 'nmslib'
+include ':api'
+include ':agent'
+
+include ':test'
