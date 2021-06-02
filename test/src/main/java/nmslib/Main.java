@@ -16,42 +16,32 @@
 
 package nmslib;
 
-import nmslib.api.craftbukkit.entity.CraftPlayer;
-import nmslib.api.nms.EntityPlayer;
-import nmslib.api.nms.ItemStack;
-import nmslib.api.nms.NBTTagCompound;
-import nmslib.api.nms.PlayerInventory;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
+import lombok.val;
+import nmslib.api.nms.*;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Arrays;
 
 /**
  * @author whilein
  */
-public final class Main extends JavaPlugin implements Listener {
+public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getServer().getPluginManager().registerEvents(this, this);
-    }
+        System.out.println(NBTTagByte.create((byte) 10).asByte());
+        System.out.println(NBTTagShort.create((short) 10).asShort());
+        System.out.println(NBTTagInt.create(10).asInt());
+        System.out.println(NBTTagLong.create(10L).asLong());
+        System.out.println(NBTTagFloat.create(10f).asFloat());
+        System.out.println(NBTTagDouble.create(10f).asDouble());
+        System.out.println(Arrays.toString(NBTTagByteArray.create(new byte[]{1, 2, 3, 4, 5}).getData()));
+        System.out.println(NBTTagString.create("Hello world!").getData());
 
-    @EventHandler
-    public void onInteract(final PlayerInteractEvent event) {
-        CraftPlayer player = (CraftPlayer) event.getPlayer();
-        EntityPlayer nms = player.getHandle();
-        PlayerInventory inventory = nms.getInventory();
-
-        ItemStack hand = inventory.getItemInHand();
-        if (hand == null) return;
-
-        NBTTagCompound tag = hand.getTag();
-
-        if (tag == null) {
-            player.sendMessage("No tag");
-        } else {
-            player.sendMessage("Tag: " + tag.clone());
-        }
+        val compound = NBTTagCompound.create();
+        compound.setByte("byte", (byte) 123);
+        System.out.println(compound.keySet());
+        System.out.println(compound);
     }
 
 }
