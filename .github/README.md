@@ -30,4 +30,6 @@
 | * | * | :x: |
 
 Буду рад, если кто-нибудь поможет в разработке данного проекта, связь со мной:
-[Vk](https://vk.com/id623151994), [Telegram](https://t.me/whilein)
+[Vk](https://vk.com/id623151994), [Telegram](https://t.me/whilein) или сервер в дискорде (см. шапку)
+
+Код применения можно глянуть [тут](../test/src/main/java/nmslib/Main.java)
