@@ -32,4 +32,5 @@ public interface ItemStack {
     int getMaxStackSize();
     int getMaxDurability();
     boolean isStackable();
+
 }
