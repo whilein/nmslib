@@ -20,6 +20,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import nmslib.agent.patch.Patch;
 import nmslib.agent.patch.Patches;
+import nmslib.agent.patch.proxy.ExactProxyTarget;
 import nmslib.agent.version.MinecraftVersion;
 
 import static nmslib.agent.name.ConstNames.*;
@@ -53,10 +54,62 @@ public final class Patcher1_8_R3 implements Patcher {
                 .fieldGetter("player");
 
         output.forClass(nmsNBTBase)
-                .implement(apiNBTBase);
+                .implement(apiNmsNBTBase);
+
+        output.forClass(nmsNBTBaseNBTNumber)
+                .implement(apiNmsNBTBaseNBTNumber)
+                .proxyMethod("c", "asLong")
+                .proxyMethod("d", "asInt")
+                .proxyMethod("e", "asShort")
+                .proxyMethod("f", "asByte")
+                .proxyMethod("g", "asDouble")
+                .proxyMethod("h", "asFloat");
+
+        output.forClass(nmsNBTTagEnd)
+                .implement(apiNmsNBTTagEnd);
+
+        output.forClass(nmsNBTTagByte)
+                .implement(apiNmsNBTTagByte);
+
+        output.forClass(nmsNBTTagShort)
+                .implement(apiNmsNBTTagShort);
+
+        output.forClass(nmsNBTTagInt)
+                .implement(apiNmsNBTTagInt);
+
+        output.forClass(nmsNBTTagLong)
+                .implement(apiNmsNBTTagLong);
+
+        output.forClass(nmsNBTTagFloat)
+                .implement(apiNmsNBTTagFloat);
+
+        output.forClass(nmsNBTTagDouble)
+                .implement(apiNmsNBTTagDouble);
+
+        output.forClass(nmsNBTTagByteArray)
+                .implement(apiNmsNBTTagByteArray)
+                .proxyMethod("c", "getData");
+
+        output.forClass(nmsNBTTagIntArray)
+                .implement(apiNmsNBTTagIntArray)
+                .proxyMethod("c", "getData");
+
+        output.forClass(nmsNBTTagString)
+                .implement(apiNmsNBTTagString)
+                .proxyMethod("a_", "getData");
+
+        output.forClass(nmsNBTTagList)
+                .implement(apiNmsNBTTagList)
+                .proxyMethod(ExactProxyTarget.create("a", "void",
+                        "int", "nmslib.api.nms.NBTBase"), "set")
+                .proxyMethod(ExactProxyTarget.create("a", "nmslib.api.nms.NBTBase",
+                        "int"), "remove")
+                .proxyMethod("g", "get");
+
 
         output.forClass(nmsNBTTagCompound)
-                .implement(apiNBTTagCompound);
+                .implement(apiNmsNBTTagCompound)
+                .proxyMethod("c", "keySet");
 
         output.forClass(nmsEntityPlayer)
                 .implement(apiNmsEntityPlayer);

@@ -19,26 +19,5 @@ package nmslib.api.nms;
 /**
  * @author whilein
  */
-public interface NBTBase {
-
-    byte getTypeId();
-    boolean isEmpty();
-
-    NBTBase clone();
-
-    interface NBTNumber extends NBTBase {
-
-        long asLong();
-
-        int asInt();
-
-        short asShort();
-
-        byte asByte();
-
-        double asDouble();
-
-        float asFloat();
-
-    }
+public interface NBTTagEnd extends NBTBase {
 }

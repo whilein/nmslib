@@ -37,7 +37,19 @@ public class ConstNames {
     public final Name nmsPlayerInventory = nms.resolve("PlayerInventory");
 
     public final Name nmsNBTBase = nms.resolve("NBTBase");
+    public final Name nmsNBTTagEnd = nms.resolve("NBTTagEnd");
+    public final Name nmsNBTTagByte = nms.resolve("NBTTagByte");
+    public final Name nmsNBTTagShort = nms.resolve("NBTTagShort");
+    public final Name nmsNBTTagInt = nms.resolve("NBTTagInt");
+    public final Name nmsNBTTagLong = nms.resolve("NBTTagLong");
+    public final Name nmsNBTTagFloat = nms.resolve("NBTTagFloat");
+    public final Name nmsNBTTagDouble = nms.resolve("NBTTagDouble");
+    public final Name nmsNBTTagIntArray = nms.resolve("NBTTagIntArray");
+    public final Name nmsNBTTagByteArray = nms.resolve("NBTTagByteArray");
+    public final Name nmsNBTTagString = nms.resolve("NBTTagString");
+    public final Name nmsNBTTagList = nms.resolve("NBTTagLost");
     public final Name nmsNBTTagCompound = nms.resolve("NBTTagCompound");
+    public final Name nmsNBTBaseNBTNumber = nms.resolve("NBTBase$NBTNumber");
 
     public final Name cbEntityCraftPlayer = cb.resolve("entity", "CraftPlayer");
     public final Name cbEntityCraftEntity = cb.resolve("entity", "CraftEntity");
@@ -48,8 +60,21 @@ public class ConstNames {
     public final Name apiNmsItemStack = api.resolve("nms", "ItemStack");
     public final Name apiNmsPlayerInventory = api.resolve("nms", "PlayerInventory");
 
-    public final Name apiNBTTagCompound = api.resolve("nms", "NBTTagCompound");
-    public final Name apiNBTBase = api.resolve("nms", "NBTBase");
+    public final Name apiNmsNBTTagCompound = api.resolve("nms", "NBTTagCompound");
+    public final Name apiNmsNBTTagEnd = api.resolve("nms", "NBTTagEnd");
+    public final Name apiNmsNBTTagByte = api.resolve("nms", "NBTTagByte");
+    public final Name apiNmsNBTTagShort = api.resolve("nms", "NBTTagShort");
+    public final Name apiNmsNBTTagInt = api.resolve("nms", "NBTTagInt");
+    public final Name apiNmsNBTTagLong = api.resolve("nms", "NBTTagLong");
+    public final Name apiNmsNBTTagFloat = api.resolve("nms", "NBTTagFloat");
+    public final Name apiNmsNBTTagDouble = api.resolve("nms", "NBTTagDouble");
+    public final Name apiNmsNBTTagIntArray = api.resolve("nms", "NBTTagIntArray");
+    public final Name apiNmsNBTTagByteArray = api.resolve("nms", "NBTTagByteArray");
+    public final Name apiNmsNBTTagString = api.resolve("nms", "NBTTagString");
+    public final Name apiNmsNBTTagList = api.resolve("nms", "NBTTagList");
+    public final Name apiNmsNBTBaseNBTNumber = api.resolve("nms", "NBTBase$NBTNumber");
+
+    public final Name apiNmsNBTBase = api.resolve("nms", "NBTBase");
 
     public final Name apiNmsEntityPlayer = api.resolve("nms", "EntityPlayer");
     public final Name apiNmsEntityHuman = api.resolve("nms", "EntityHuman");

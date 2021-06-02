@@ -19,26 +19,14 @@ package nmslib.api.nms;
 /**
  * @author whilein
  */
-public interface NBTBase {
+public interface NBTTagFloat extends NBTBase.NBTNumber {
 
-    byte getTypeId();
-    boolean isEmpty();
-
-    NBTBase clone();
-
-    interface NBTNumber extends NBTBase {
-
-        long asLong();
-
-        int asInt();
-
-        short asShort();
-
-        byte asByte();
-
-        double asDouble();
-
-        float asFloat();
-
+    static NBTTagFloat create() {
+        throw new UnsupportedOperationException();
     }
+
+    static NBTTagFloat create(final float value) {
+        throw new UnsupportedOperationException();
+    }
+
 }

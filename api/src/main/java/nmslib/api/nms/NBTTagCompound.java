@@ -16,6 +16,8 @@
 
 package nmslib.api.nms;
 
+import java.util.Set;
+
 /**
  * @author whilein
  */
@@ -25,7 +27,27 @@ public interface NBTTagCompound extends NBTBase {
         throw new UnsupportedOperationException();
     }
 
+    boolean hasKey(String name);
+    boolean hasKeyOfType(String name, int type);
+
+    void remove(String name);
+
+    Set<String> keySet();
+
     NBTBase get(String name);
+    NBTTagCompound getCompound(String name);
+    NBTTagList getList(String name);
+
+    byte getByte(String name);
+    short getShort(String name);
+    int getInt(String name);
+    long getLong(String name);
+    float getFloat(String name);
+    double getDouble(String name);
+    byte[] getByteArray(String name);
+    String getString(String name);
+    int[] getIntArray(String name);
+    boolean getBoolean(String name);
 
     void set(String name, NBTBase nbt);
     void setByte(String name, byte value);
