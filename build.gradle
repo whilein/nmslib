@@ -33,10 +33,6 @@ subprojects {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    processResources {
-        expand(version: project.version)
-    }
-
     test {
         useJUnitPlatform()
     }

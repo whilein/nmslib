@@ -6,3 +6,7 @@ shadowJar {
     destinationDirectory = file("$rootDir/output")
     archiveFileName = "nmslib-test.jar"
 }
+
+processResources {
+    expand(version: project.version)
+}
