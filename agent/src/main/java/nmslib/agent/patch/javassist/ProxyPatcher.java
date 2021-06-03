@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import nmslib.agent.AgentContext;
-import nmslib.agent.name.ClassName;
 import nmslib.agent.patch.proxy.ProxyTarget;
 
 /**
@@ -72,17 +71,17 @@ public final class ProxyPatcher implements JavassistClassPatcher {
         val proxiedParameters = new CtClass[originalParameters.length];
 
         for (int i = 0; i < proxiedParameters.length; i++) {
-            val proxy = proxies.getProxy(ClassName.parse(originalParameters[i].getName()));
+            val proxy = proxies.getProxy(originalParameters[i].getName());
 
             proxiedParameters[i] = proxy != null
-                    ? ctx.resolve(proxy.convertToString())
+                    ? ctx.resolve(proxy)
                     : originalParameters[i];
         }
 
-        val returnTypeProxy = proxies.getProxy(ClassName.parse(originalReturnType.getName()));
+        val returnTypeProxy = proxies.getProxy(originalReturnType.getName());
 
         val returnType = returnTypeProxy != null
-                ? ctx.resolve(returnTypeProxy.convertToString())
+                ? ctx.resolve(returnTypeProxy)
                 : originalReturnType;
 
         val body = new StringBuilder();

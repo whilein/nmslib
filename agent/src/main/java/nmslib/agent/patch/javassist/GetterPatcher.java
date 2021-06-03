@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import nmslib.agent.AgentContext;
-import nmslib.agent.name.ClassName;
 
 /**
  * @author whilein
@@ -45,11 +44,11 @@ public final class GetterPatcher implements JavassistClassPatcher {
     public void patch(final AgentContext ctx) throws Exception {
         val current = ctx.getCurrent();
         val field = current.getDeclaredField(this.field);
-        val proxy = ctx.getProxyRegistry().getProxy(ClassName.parse(field.getType().getName()));
+        val proxy = ctx.getProxyRegistry().getProxy(field.getType().getName());
 
         val type = proxy == null
                 ? field.getType().getName()
-                : proxy.convertToString();
+                : proxy;
 
         current.addMethod(CtNewMethod.make("public " + type + " " + getter + "() { return "
                 + (proxy != null ? "(" + type + ")": "")

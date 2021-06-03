@@ -14,24 +14,18 @@
  *    limitations under the License.
  */
 
-package nmslib.agent;
+package nmslib.agent.patch;
 
-import nmslib.agent.patch.reader.MinecraftPatchReader;
-import nmslib.agent.patch.resolver.ResourcePatchResolver;
-
-import java.lang.instrument.Instrumentation;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author whilein
  */
-public final class AgentMain {
+public interface ParsedPatches {
 
-    public static void premain(final String agentArgs, final Instrumentation instrumentation) {
-        instrumentation.addTransformer(AgentClassPatcher.create(
-                MinecraftPatchReader.create(
-                        ResourcePatchResolver.create("patches/", ".nmspatch")
-                )
-        ));
-    }
+    void apply(Patch patch);
 
+    List<String[]> getCommands();
+    Map<String, ParsedPatches> getPatches();
 }

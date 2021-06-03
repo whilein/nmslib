@@ -14,16 +14,31 @@
  *    limitations under the License.
  */
 
-package nmslib.api.craftbukkit.entity;
+package nmslib.agent.patch;
 
-import nmslib.api.nms.EntityHuman;
-import org.bukkit.entity.HumanEntity;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author whilein
  */
-public interface CraftHumanEntity extends CraftLivingEntity, HumanEntity {
+public final class EmptyParsedPatches implements ParsedPatches {
 
-    EntityHuman getHandle();
+    public static final ParsedPatches INSTANCE = new EmptyParsedPatches();
+
+    @Override
+    public void apply(final Patch patch) {
+    }
+
+    @Override
+    public List<String[]> getCommands() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Map<String, ParsedPatches> getPatches() {
+        return Collections.emptyMap();
+    }
 
 }

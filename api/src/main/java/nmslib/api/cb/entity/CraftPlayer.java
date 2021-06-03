@@ -14,21 +14,17 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.patch;
+package nmslib.api.cb.entity;
 
-import nmslib.agent.patch.proxy.ProxyRegistry;
-import nmslib.agent.version.Version;
 
-import java.util.Optional;
+import nmslib.api.nms.EntityPlayer;
+import org.bukkit.entity.Player;
 
 /**
  * @author whilein
  */
-public interface Patches {
+public interface CraftPlayer extends CraftHumanEntity, Player {
 
-    ProxyRegistry getProxyRegistry();
-
-    Optional<Patch> get(Version version);
-    Patch patch(Version version);
+    EntityPlayer getHandle();
 
 }

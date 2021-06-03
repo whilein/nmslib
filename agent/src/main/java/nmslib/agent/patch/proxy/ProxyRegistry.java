@@ -16,14 +16,12 @@
 
 package nmslib.agent.patch.proxy;
 
-import nmslib.agent.name.Name;
-
 /**
  * @author whilein
  */
 public interface ProxyRegistry {
 
-    ProxyRegistry addProxy(Name name, Name proxy);
-    Name getProxy(Name name);
+    ProxyRegistry addProxy(String name, String proxy);
+    String getProxy(String name);
     
 }

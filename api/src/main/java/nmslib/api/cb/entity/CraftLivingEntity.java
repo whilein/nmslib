@@ -14,15 +14,16 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.patcher;
+package nmslib.api.cb.entity;
 
-import nmslib.agent.patch.Patch;
+import nmslib.api.nms.EntityLiving;
+import org.bukkit.entity.LivingEntity;
 
 /**
  * @author whilein
  */
-public interface Patcher {
+public interface CraftLivingEntity extends CraftEntity, LivingEntity {
 
-    void apply(Patch output);
+    EntityLiving getHandle();
 
 }

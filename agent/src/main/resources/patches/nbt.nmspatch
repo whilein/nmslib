@@ -1,0 +1,41 @@
+class $nms.NBTBase
+  implement $api.nms.NBTBase
+
+class $nms.NBTBase$NBTNumber
+  implement $api.nms.NBTBase$NBTNumber
+
+class $nms.NBTTagEnd
+  implement $api.nms.NBTTagEnd
+
+class $nms.NBTTagByte
+  implement $api.nms.NBTTagByte
+
+class $nms.NBTTagShort
+  implement $api.nms.NBTTagShort
+
+class $nms.NBTTagInt
+  implement $api.nms.NBTTagInt
+
+class $nms.NBTTagLong
+  implement $api.nms.NBTTagLong
+
+class $nms.NBTTagFloat
+  implement $api.nms.NBTTagFloat
+
+class $nms.NBTTagDouble
+  implement $api.nms.NBTTagDouble
+
+class $nms.NBTTagIntArray
+  implement $api.nms.NBTTagIntArray
+
+class $nms.NBTTagByteArray
+  implement $api.nms.NBTTagByteArray
+
+class $nms.NBTTagString
+  implement $api.nms.NBTTagString
+
+class $nms.NBTTagList
+  implement $api.nms.NBTTagList
+
+class $nms.NBTTagCompound
+  implement $api.nms.NBTTagCompound

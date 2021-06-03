@@ -14,31 +14,15 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.name;
+package nmslib.agent.patch.resolver;
 
-import java.util.Map;
+import java.io.InputStream;
 
 /**
  * @author whilein
  */
-public interface Name {
+public interface PatchResolver {
 
-    boolean startsWith(Name name);
-    boolean startsWith(Name name, boolean strict);
-
-    float matches(Name name);
-    <V> V almostMatches(Map<Name, V> in);
-
-    Name resolve(String value);
-    Name resolve(String... value);
-
-    Name format(Object... values);
-
-    String[] toArray();
-    String valueAt(int i);
-    int size();
-
-    String convertToInternalString();
-    String convertToString();
+    InputStream resolve(String name);
 
 }

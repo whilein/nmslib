@@ -1,0 +1,24 @@
+class $nms.NBTBase$NBTNumber
+  proxym c asLong
+  proxym d asInt
+  proxym e asShort
+  proxym f asByte
+  proxym g asDouble
+  proxym h asFloat
+
+class $nms.NBTTagIntArray
+   proxym c getData
+
+class $nms.NBTTagByteArray
+  proxym c getData
+
+class $nms.NBTTagString
+  proxym a_ getData
+
+class $nms.NBTTagList
+  proxym a [void int $api.nms.NBTBase] set
+  proxym a [$api.nms.NBTBase int] remove
+  proxym g get
+
+class $nms.NBTTagCompound
+  proxym c keySet

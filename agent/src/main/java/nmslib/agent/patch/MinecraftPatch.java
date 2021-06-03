@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import nmslib.agent.name.Name;
+import nmslib.agent.patch.proxy.ProxyRegistry;
 import nmslib.agent.version.Version;
 
 import java.util.HashMap;
@@ -36,22 +36,15 @@ import java.util.Optional;
 public final class MinecraftPatch implements Patch {
 
     @Getter
-    final Patches patches;
-
-    @Getter
     final Version version;
 
-    final Map<Name, PatchClass> classes;
+    @Getter
+    final ProxyRegistry proxyRegistry;
 
-    Version extend;
+    final Map<String, PatchClass> classes;
 
-    public static Patch create(final Patches patches, final Version version) {
-        return new MinecraftPatch(patches, version, new HashMap<>());
-    }
-
-    @Override
-    public void extend(final Version version) {
-        this.extend = version;
+    public static Patch create(final Version version, final ProxyRegistry proxyRegistry) {
+        return new MinecraftPatch(version, proxyRegistry, new HashMap<>());
     }
 
     @Override
@@ -60,20 +53,24 @@ public final class MinecraftPatch implements Patch {
     }
 
     @Override
-    public PatchClass forClass(final Name name) {
+    public int countPatches() {
+        int mods = 0;
+
+        for (val cls : classes.values()) {
+            mods += cls.countPatches();
+        }
+
+        return mods;
+    }
+
+    @Override
+    public PatchClass forClass(final String name) {
         return classes.computeIfAbsent(name, __ -> MinecraftPatchClass.create(name, this));
     }
 
     @Override
-    public Optional<PatchClass> findMatches(final Name name) {
-        val almostMatch = name.almostMatches(classes);
-
-        if (almostMatch == null && extend != null) {
-            return patches.get(extend)
-                    .flatMap(patch -> patch.findMatches(name));
-        }
-
-        return Optional.ofNullable(almostMatch);
+    public Optional<PatchClass> findMatches(final String name) {
+        return Optional.ofNullable(classes.get(name));
     }
 
 }

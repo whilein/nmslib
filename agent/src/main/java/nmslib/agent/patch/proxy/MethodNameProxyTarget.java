@@ -37,11 +37,6 @@ public final class MethodNameProxyTarget implements ProxyTarget {
         return methodName.equals(this.methodName);
     }
 
-    @Override
-    public String toString() {
-        return "{* " + methodName + "(*)}";
-    }
-
     public static ProxyTarget create(final String name) {
         return new MethodNameProxyTarget(name);
     }

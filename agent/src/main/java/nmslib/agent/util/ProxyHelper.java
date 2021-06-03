@@ -20,7 +20,6 @@ import javassist.CtClass;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import nmslib.agent.AgentContext;
-import nmslib.agent.name.ClassName;
 
 import java.util.Arrays;
 
@@ -49,13 +48,13 @@ public class ProxyHelper {
     }
 
     public CtClass getProxy(final AgentContext ctx, final CtClass cls) {
-        val name = ClassName.parse(cls.getName());
-        val proxy = ctx.getProxyRegistry().getProxy(name);
+        val proxy = ctx.getProxyRegistry().getProxy(cls.getName());
 
-        if (proxy == null)
+        if (proxy == null) {
             return cls;
+        }
 
-        return ctx.resolve(proxy.format(ctx.getVersion()).convertToString());
+        return ctx.resolve(proxy);
     }
 
 }

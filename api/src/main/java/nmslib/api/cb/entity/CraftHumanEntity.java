@@ -14,15 +14,16 @@
  *    limitations under the License.
  */
 
-package nmslib.api.craftbukkit.entity;
+package nmslib.api.cb.entity;
 
-import nmslib.api.nms.Entity;
+import nmslib.api.nms.EntityHuman;
+import org.bukkit.entity.HumanEntity;
 
 /**
  * @author whilein
  */
-public interface CraftEntity extends org.bukkit.entity.Entity {
+public interface CraftHumanEntity extends CraftLivingEntity, HumanEntity {
 
-    Entity getHandle();
+    EntityHuman getHandle();
 
 }

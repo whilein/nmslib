@@ -29,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import nmslib.agent.AgentContext;
-import nmslib.agent.name.Name;
 import nmslib.agent.util.ProxyHelper;
 
 import java.lang.reflect.Modifier;
@@ -42,9 +41,9 @@ import java.util.Arrays;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ImplementPatcher implements JavassistClassPatcher {
 
-    Name implementation;
+    String implementation;
 
-    public static JavassistClassPatcher create(final @NonNull Name implementation) {
+    public static JavassistClassPatcher create(final @NonNull String implementation) {
         return new ImplementPatcher(implementation);
     }
 
@@ -57,8 +56,16 @@ public final class ImplementPatcher implements JavassistClassPatcher {
     @Override
     public void patch(final AgentContext ctx) throws Exception {
         val cls = ctx.getCurrent();
-        cls.addInterface(ctx.resolve(implementation.convertToString()));
 
+        val implementation = ctx.resolve(this.implementation);
+
+        if (implementation == null) {
+            throw new IllegalStateException("Implementation " + this.implementation + " not found");
+        }
+
+        cls.addInterface(implementation);
+
+        // generate proxies and bridges
         for (val method : cls.getDeclaredMethods()) {
             if (Modifier.isStatic(method.getModifiers()))
                 continue;

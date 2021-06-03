@@ -52,11 +52,6 @@ public final class ExactProxyTarget implements ProxyTarget {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "{" + returnType + " " + methodName + "(" + String.join(", ", params) + ")}";
-    }
-
     public static ProxyTarget create(
             final String methodName,
             final String returnType,

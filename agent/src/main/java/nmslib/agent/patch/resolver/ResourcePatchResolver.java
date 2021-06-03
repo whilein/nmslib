@@ -14,44 +14,34 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.patch;
+package nmslib.agent.patch.resolver;
 
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import nmslib.agent.patch.proxy.ProxyRegistry;
-import nmslib.agent.patch.proxy.SimpleProxyRegistry;
-import nmslib.agent.version.Version;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.io.InputStream;
 
 /**
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MinecraftPatches implements Patches {
+public final class ResourcePatchResolver implements PatchResolver {
 
-    @Getter
-    ProxyRegistry proxyRegistry;
+    String prefix;
+    String suffix;
 
-    Map<Version, Patch> patches;
-
-    public static Patches create() {
-        return new MinecraftPatches(SimpleProxyRegistry.create(), new HashMap<>());
+    public static PatchResolver create(
+            final @NonNull String prefix,
+            final @NonNull String suffix
+    ) {
+        return new ResourcePatchResolver(prefix, suffix);
     }
 
     @Override
-    public Optional<Patch> get(final Version version) {
-        return Optional.ofNullable(patches.get(version));
-    }
-
-    @Override
-    public Patch patch(final Version version) {
-        return patches.computeIfAbsent(version,
-                __ -> MinecraftPatch.create(this, version));
+    public InputStream resolve(final String name) {
+        return getClass().getClassLoader().getResourceAsStream(prefix + name + suffix);
     }
 }

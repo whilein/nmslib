@@ -14,16 +14,20 @@
  *    limitations under the License.
  */
 
-package nmslib.api.craftbukkit.entity;
+package nmslib.agent.patch.reader;
 
-import nmslib.api.nms.EntityLiving;
-import org.bukkit.entity.LivingEntity;
+import nmslib.agent.patch.ParsedPatches;
+import nmslib.agent.patch.resolver.PatchResolver;
+
+import java.io.IOException;
 
 /**
  * @author whilein
  */
-public interface CraftLivingEntity extends CraftEntity, LivingEntity {
+public interface PatchReader {
 
-    EntityLiving getHandle();
+    PatchResolver getResolver();
+
+    ParsedPatches read(String name) throws IOException;
 
 }

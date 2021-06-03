@@ -22,11 +22,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import nmslib.agent.AgentContext;
-import nmslib.agent.name.Name;
 import nmslib.agent.patch.javassist.*;
-import nmslib.agent.patch.proxy.MethodNameProxyTarget;
 import nmslib.agent.patch.proxy.ProxyTarget;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -38,20 +35,19 @@ import java.util.Set;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MinecraftPatchClass implements PatchClass {
 
-    @Getter
-    Name name;
+    String name;
 
     @Getter
     Patch patch;
 
     Set<JavassistClassPatcher> patchers;
 
-    public static PatchClass create(final Name name, final Patch patch) {
+    public static PatchClass create(final String name, final Patch patch) {
         return new MinecraftPatchClass(name, patch, new LinkedHashSet<>());
     }
 
     @Override
-    public PatchClass implement(final Name type) {
+    public PatchClass implement(final String type) {
         patch.forClass(type).patch(FactoryPatcher.create(name));
         return patch(ImplementPatcher.create(type));
     }
@@ -64,14 +60,6 @@ public final class MinecraftPatchClass implements PatchClass {
 
     @Override
     public PatchClass proxyMethod(
-            final String name,
-            final String proxyName
-    ) {
-        return proxyMethod(MethodNameProxyTarget.create(name), proxyName);
-    }
-
-    @Override
-    public PatchClass proxyMethod(
             final ProxyTarget target,
             final String proxyName
     ) {
@@ -79,28 +67,8 @@ public final class MinecraftPatchClass implements PatchClass {
     }
 
     @Override
-    public PatchClass fieldGetter(final String field) {
-        return patch(GetterPatcher.create(field, "get" + StringUtils.capitalize(field)));
-    }
-
-    @Override
-    public PatchClass fieldSetter(final String field) {
-        return patch(SetterPatcher.create(field, "set" + StringUtils.capitalize(field)));
-    }
-
-    @Override
     public PatchClass fieldGetter(final String field, final String getter) {
         return patch(GetterPatcher.create(field, getter));
-    }
-
-    @Override
-    public PatchClass fieldAccessor(final String field, final String getter, final String setter) {
-        return fieldGetter(field, getter).fieldSetter(field, setter);
-    }
-
-    @Override
-    public PatchClass fieldAccessor(final String field) {
-        return fieldGetter(field).fieldSetter(field);
     }
 
     @Override
@@ -113,6 +81,11 @@ public final class MinecraftPatchClass implements PatchClass {
         for (val patcher : patchers) {
             patcher.patch(ctx);
         }
+    }
+
+    @Override
+    public int countPatches() {
+        return patchers.size();
     }
 
 }

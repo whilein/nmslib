@@ -1,0 +1,57 @@
+include 1.8.8/nbt
+
+class $nms.Item
+  implement $api.nms.Item
+
+class $nms.ItemStack
+  implement $api.nms.ItemStack
+  proxym c load
+  proxym j getMaxDurability
+  accessor count
+
+class $nms.PlayerInventory
+  implement $api.nms.PlayerInventory
+  accessor itemInHandIndex
+  accessor items
+  accessor armor
+  getter player
+
+class $nms.EntityPlayer
+  implement $api.nms.EntityPlayer
+
+class $nms.EntityHuman
+  implement $api.nms.EntityHuman
+  getter inventory
+
+class $nms.EntityLiving
+  implement $api.nms.EntityLiving
+
+class $nms.Entity
+  implement $api.nms.Entity
+  accessor lastX
+  accessor lastY
+  accessor lastZ
+  accessor locX
+  accessor locY
+  accessor locZ
+  accessor motX
+  accessor motY
+  accessor motZ
+  accessor yaw
+  accessor pitch
+  accessor lastYaw
+  accessor lastPitch
+  accessor vehicle
+  accessor passenger
+
+class $cb.entity.CraftPlayer
+  implement $api.cb.entity.CraftPlayer
+
+class $cb.entity.CraftHumanEntity
+  implement $api.cb.entity.CraftHumanEntity
+
+class $cb.entity.CraftLivingEntity
+  implement $api.cb.entity.CraftLivingEntity
+
+class $cb.entity.CraftEntity
+  implement $api.cb.entity.CraftEntity

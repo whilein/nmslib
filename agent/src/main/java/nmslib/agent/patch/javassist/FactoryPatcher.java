@@ -23,8 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import nmslib.agent.AgentContext;
-import nmslib.agent.name.ClassName;
-import nmslib.agent.name.Name;
 
 /**
  * @author whilein
@@ -33,9 +31,9 @@ import nmslib.agent.name.Name;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FactoryPatcher implements JavassistClassPatcher {
 
-    Name produces;
+    String produces;
 
-    public static JavassistClassPatcher create(final @NonNull Name produces) {
+    public static JavassistClassPatcher create(final @NonNull String produces) {
         return new FactoryPatcher(produces);
     }
 
@@ -43,7 +41,6 @@ public final class FactoryPatcher implements JavassistClassPatcher {
     public void patch(final AgentContext ctx) throws Exception {
         val current = ctx.getCurrent();
         val proxies = ctx.getProxyRegistry();
-        val version = ctx.getVersion();
 
         for (val method : current.getDeclaredMethods()) {
             if (!Modifier.isStatic(method.getModifiers())) {
@@ -51,20 +48,18 @@ public final class FactoryPatcher implements JavassistClassPatcher {
             }
 
             val params = method.getParameterTypes();
-            val proxiedParams = new Name[params.length];
+            val proxiedParams = new String[params.length];
 
             for (int i = 0; i < params.length; i++) {
-                val name = ClassName.parse(params[i].getName());
+                val name = params[i].getName();
                 val proxy = proxies.getProxy(name);
 
                 proxiedParams[i] = proxy == null
                         ? name : proxy;
             }
 
-            val producesName = produces.format(version).convertToString();
-
             val sb = new StringBuilder();
-            sb.append("{ return new ").append(producesName).append('(');
+            sb.append("{ return new ").append(produces).append('(');
 
             for (int i = 0; i < params.length; i++) {
                 if (i != 0) sb.append(',');

@@ -21,10 +21,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import nmslib.agent.name.ClassName;
-import nmslib.agent.name.ConstNames;
+import nmslib.agent.patch.MinecraftPatch;
 import nmslib.agent.patch.Patch;
-import nmslib.agent.patch.Patches;
+import nmslib.agent.patch.proxy.SimpleProxyRegistry;
+import nmslib.agent.patch.reader.PatchReader;
 import nmslib.agent.version.MinecraftVersion;
 import nmslib.agent.version.Version;
 
@@ -42,11 +42,11 @@ public final class AgentClassPatcher implements ClassFileTransformer {
     Version version;
     boolean notSupported;
 
+    final PatchReader patchReader;
     final ClassPool classPool;
-    final Patches patches;
 
-    public static ClassFileTransformer create(final Patches patches) {
-        return new AgentClassPatcher(ClassPool.getDefault(), patches);
+    public static ClassFileTransformer create(final PatchReader reader) {
+        return new AgentClassPatcher(reader, ClassPool.getDefault());
     }
 
     @Override
@@ -63,17 +63,29 @@ public final class AgentClassPatcher implements ClassFileTransformer {
 
         try {
             if (className != null) {
-                val name = ClassName.parseInternal(className);
+                val name = className.replace('/', '.');
 
                 if (patch == null) {
-                    if (name.startsWith(ConstNames.nms, false)) {
-                        version = MinecraftVersion.getByName(name.valueAt(3));
+                    if (name.startsWith("net.minecraft.server.")) {
+                        version = MinecraftVersion.getByName(name.split("\\.")[3]);
 
-                        val patch = patches.get(version);
-                        patch.ifPresent(value -> this.patch = value);
+                        patch = MinecraftPatch.create(version, SimpleProxyRegistry.create());
 
-                        notSupported = !patch.isPresent();
-                        System.out.println("Version detected { name = " + version + ", support ?= " + patch.isPresent() + " }");
+                        val parsedPatch = patchReader.read("root");
+                        parsedPatch.apply(patch);
+
+                        val patches = patch.countPatches();
+                        notSupported = patches == 0;
+
+                        System.out.println(
+                                "Version detected { name = " + version
+                                        + (notSupported ? ", notSupported" : ", patches = " + patches)
+                                        + " }"
+                        );
+
+                        if (notSupported) {
+                            return null;
+                        }
                     } else {
                         return null;
                     }
@@ -82,10 +94,9 @@ public final class AgentClassPatcher implements ClassFileTransformer {
                 val patchClass = patch.findMatches(name).orElse(null);
 
                 if (patchClass != null) {
-                    val ctClass = classPool.get(name.convertToString());
+                    val ctClass = classPool.get(name);
 
-                    patchClass.patch(SimpleAgentContext.create(version, patches.getProxyRegistry(),
-                            classPool, ctClass));
+                    patchClass.patch(SimpleAgentContext.create(version, patch.getProxyRegistry(), classPool, ctClass));
 
                     val result = ctClass.toBytecode();
                     ctClass.detach();

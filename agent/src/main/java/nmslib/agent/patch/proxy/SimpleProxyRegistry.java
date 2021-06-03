@@ -22,7 +22,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import nmslib.agent.name.Name;
 
 /**
  * @author whilein
@@ -31,24 +30,24 @@ import nmslib.agent.name.Name;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SimpleProxyRegistry implements ProxyRegistry {
 
-    BiMap<Name, Name> proxies;
+    BiMap<String, String> proxies;
 
     public static ProxyRegistry create() {
         return new SimpleProxyRegistry(HashBiMap.create());
     }
 
     @Override
-    public ProxyRegistry addProxy(final Name name, final Name proxy) {
+    public ProxyRegistry addProxy(final String name, final String proxy) {
         this.proxies.put(name, proxy);
         return this;
     }
 
     @Override
-    public Name getProxy(final Name name) {
-        val byKey = name.almostMatches(proxies);
+    public String getProxy(final String name) {
+        val byKey = proxies.get(name);
 
         return byKey == null
-                ? name.almostMatches(proxies.inverse())
+                ? proxies.inverse().get(name)
                 : byKey;
     }
 

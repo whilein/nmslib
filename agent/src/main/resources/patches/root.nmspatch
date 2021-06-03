@@ -1,0 +1,5 @@
+include proxy
+include nbt
+
+version v1_8_R3
+  include 1.8.8/root
