@@ -9,7 +9,6 @@ jar {
 
 shadowJar {
     relocate("javassist", "nmslib.agent.dep.javassist")
-    relocate("com.google.gson", "nmslib.agent.dep.gson")
 
     destinationDirectory = file("$rootDir/output")
     archiveFileName = "nmslib-patcher.jar"
@@ -17,6 +16,5 @@ shadowJar {
 
 dependencies {
     implementation 'org.javassist:javassist:3.28.0-GA'
-    implementation 'com.google.code.gson:gson:2.8.6'
     implementation project(":api")
 }
