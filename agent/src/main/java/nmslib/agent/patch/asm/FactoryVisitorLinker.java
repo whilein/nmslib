@@ -98,7 +98,7 @@ public final class FactoryVisitorLinker implements VisitorLinker {
                         pos += fixParam.getSize();
 
                         if (!param.equals(fixParam)) {
-                            method.visitTypeInsn(Opcodes.CHECKCAST, params[i].getInternalName());
+                            method.visitTypeInsn(Opcodes.CHECKCAST, fixParams[i].getInternalName());
                         }
                     }
 
