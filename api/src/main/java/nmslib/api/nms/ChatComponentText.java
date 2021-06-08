@@ -28,4 +28,6 @@ public interface ChatComponentText extends IChatBaseComponent {
         throw new UnsupportedOperationException();
     }
 
+    ChatComponentText copy();
+
 }

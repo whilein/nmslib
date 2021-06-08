@@ -24,8 +24,11 @@ import java.util.List;
 public interface IChatBaseComponent extends Iterable<IChatBaseComponent> {
 
     String getText();
+
+    IChatBaseComponent setChatModifier(ChatModifier value);
     ChatModifier getChatModifier();
 
+    IChatBaseComponent addTextSibling(String text);
     IChatBaseComponent addSibling(IChatBaseComponent sibling);
     List<? extends IChatBaseComponent> getSiblings();
 

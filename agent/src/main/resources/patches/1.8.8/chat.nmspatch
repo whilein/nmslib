@@ -1,5 +1,9 @@
 class $nms.IChatBaseComponent
   rename a ()Ljava/util/List; getSiblings
+  rename a (Ljava/lang/String;)L$nms/IChatBaseComponent; addTextSibling
+
+class $nms.ChatComponentText
+  rename h copy
 
 class $nms.ChatModifier
   rename j ()Ljava/lang/String; getInsertion
