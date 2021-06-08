@@ -16,11 +16,16 @@
 
 package nmslib.api.nms;
 
+import nmslib.api.annotation.FieldGenerated;
+
 /**
  * @author whilein
  */
 public interface ItemStack {
+    @FieldGenerated
     int getCount();
+
+    @FieldGenerated
     void setCount(int count);
 
     Item getItem();
