@@ -62,10 +62,10 @@ public interface Entity {
     void setWidth(float width);
 
     @FieldGenerated
-    float getHeight();
+    float getLength();
 
     @FieldGenerated
-    void setHeight(float height);
+    void setLength(float length);
 
     @FieldGenerated
     double getLastX();
