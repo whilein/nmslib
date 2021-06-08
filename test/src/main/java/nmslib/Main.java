@@ -24,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Method;
@@ -103,43 +104,43 @@ public final class Main extends JavaPlugin {
                 break;
             }
             case "test-packets": {
-                val player = Bukkit.getPlayerExact(args[0]);
-                val craftPlayer = (CraftPlayer) player;
-                val entityPlayer = craftPlayer.getHandle();
+                final Player player = Bukkit.getPlayerExact(args[0]);
 
-                entityPlayer.getPlayerConnection().sendPacket(
+                final nmslib.api.cb.entity.CraftPlayer craftPlayer
+                        = (CraftPlayer) player;
+
+                final nmslib.api.nms.EntityPlayer entityPlayer = craftPlayer.getHandle();
+
+                final nmslib.api.nms.PlayerConnection playerConnection = entityPlayer.getPlayerConnection();
+
+                playerConnection.sendPacket(
                         PacketPlayOutChat.create(
                                 ChatComponentText.create("Hello world!"),
                                 PacketPlayOutChat.Position.HOTBAR
                         )
                 );
+
+                playerConnection.sendPacket(
+                        PacketPlayOutTitle.create(
+                                PacketPlayOutTitle.EnumTitleAction.TITLE,
+                                ChatComponentText.create("*Title*")
+                        )
+                );
+
+                playerConnection.sendPacket(
+                        PacketPlayOutTitle.create(
+                                PacketPlayOutTitle.EnumTitleAction.SUBTITLE,
+                                ChatComponentText.create("*Subtitle*")
+                        )
+                );
+
                 break;
             }
             case "test-enums": {
-                getLogger().info("EnumChatFormat: ");
-
-                getLogger().info(" " + EnumChatFormat.BLACK.name()
-                        + " " + EnumChatFormat.DARK_BLUE.name()
-                        + " " + EnumChatFormat.DARK_GREEN.name()
-                        + " " + EnumChatFormat.DARK_AQUA.name());
-                getLogger().info(" " + EnumChatFormat.DARK_RED.name()
-                        + " " + EnumChatFormat.DARK_PURPLE.name()
-                        + " " + EnumChatFormat.GOLD.name()
-                        + " " + EnumChatFormat.GRAY.name());
-                getLogger().info(" " + EnumChatFormat.DARK_GRAY.name()
-                        + " " + EnumChatFormat.BLUE.name()
-                        + " " + EnumChatFormat.GREEN.name()
-                        + " " + EnumChatFormat.AQUA.name());
-                getLogger().info(" " + EnumChatFormat.RED.name()
-                        + " " + EnumChatFormat.LIGHT_PURPLE.name()
-                        + " " + EnumChatFormat.YELLOW.name()
-                        + " " + EnumChatFormat.WHITE.name());
-                getLogger().info(" " + EnumChatFormat.OBFUSCATED.name()
-                        + " " + EnumChatFormat.BOLD.name()
-                        + " " + EnumChatFormat.STRIKETHROUGH.name()
-                        + " " + EnumChatFormat.UNDERLINE.name());
-                getLogger().info(" " + EnumChatFormat.ITALIC.name()
-                        + " " + EnumChatFormat.RESET.name());
+                getLogger().info("EnumChatFormat: " + Arrays.toString(EnumChatFormat.VALUES));
+                getLogger().info("EnumClickAction: " + Arrays.toString(ChatClickable.EnumClickAction.VALUES));
+                getLogger().info("EnumHoverAction: " + Arrays.toString(ChatHoverable.EnumHoverAction.VALUES));
+                getLogger().info("EnumTitleAction: " + Arrays.toString(PacketPlayOutTitle.EnumTitleAction.VALUES));
             }
         }
 

@@ -13,3 +13,10 @@ class $nms.Packet
 class $nms.PacketPlayOutChat
   accessor a getComponent setComponent
   accessor b getPositionIndex setPositionIndex
+
+class $nms.PacketPlayOutTitle
+  accessor a getAction setAction
+  accessor b getComponent setComponent
+  accessor c getFadeIn setFadeIn
+  accessor d getStay setStay
+  accessor e getFadeOut setFadeOut
