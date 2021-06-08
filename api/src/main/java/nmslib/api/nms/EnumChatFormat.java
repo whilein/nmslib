@@ -16,6 +16,8 @@
 
 package nmslib.api.nms;
 
+import nmslib.api.annotation.FactoryMethod;
+
 /**
  * @author whilein
  */
@@ -44,6 +46,7 @@ public interface EnumChatFormat {
     EnumChatFormat ITALIC = valueOf("ITALIC");
     EnumChatFormat RESET = valueOf("RESET");
 
+    @FactoryMethod
     static EnumChatFormat valueOf(final String name) {
         throw new UnsupportedOperationException();
     }

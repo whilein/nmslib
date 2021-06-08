@@ -14,20 +14,20 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.patch.reader;
+package nmslib.agent.patch.parser;
 
-import nmslib.agent.patch.ParsedPatches;
-import nmslib.agent.patch.resolver.PatchResolver;
+import nmslib.agent.patch.Patch;
 
-import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author whilein
  */
-public interface PatchReader {
+public interface ParsedPatches {
 
-    PatchResolver getResolver();
+    void apply(Patch patch);
 
-    ParsedPatches read(String name) throws IOException;
-
+    List<String[]> getCommands();
+    Map<String, ParsedPatches> getPatches();
 }

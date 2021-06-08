@@ -7,3 +7,4 @@ commands:
   test-factories: {}
   test-patchers: {}
   test-enums: {}
+  test-packets: {}

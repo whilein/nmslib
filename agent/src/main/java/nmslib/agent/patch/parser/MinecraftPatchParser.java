@@ -14,16 +14,13 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.patch.reader;
+package nmslib.agent.patch.parser;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import nmslib.agent.patch.EmptyParsedPatches;
-import nmslib.agent.patch.MinecraftParsedPatches;
-import nmslib.agent.patch.ParsedPatches;
 import nmslib.agent.patch.resolver.PatchResolver;
 
 import java.io.IOException;
@@ -35,13 +32,13 @@ import java.util.ArrayList;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MinecraftPatchReader implements PatchReader {
+public final class MinecraftPatchParser implements PatchParser {
 
     @Getter
     PatchResolver resolver;
 
-    public static PatchReader create(final PatchResolver resolver) {
-        return new MinecraftPatchReader(resolver);
+    public static PatchParser create(final PatchResolver resolver) {
+        return new MinecraftPatchParser(resolver);
     }
 
     @Override

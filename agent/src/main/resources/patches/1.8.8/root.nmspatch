@@ -1,5 +1,6 @@
 include 1.8.8/entity-nms
 include 1.8.8/entity-cb
+include 1.8.8/packet
 include 1.8.8/chat
 include 1.8.8/nbt
 

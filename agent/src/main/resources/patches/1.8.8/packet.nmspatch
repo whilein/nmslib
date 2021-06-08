@@ -1,0 +1,15 @@
+class $nms.PacketDataSerializer
+  rename a (Ljava/util/UUID;)V writeUUID
+  rename g ()Ljava/util/UUID; readUUID
+  rename b (I)V writeVarInt
+  rename b (J)V writeVarLong
+  rename e ()I readVarInt
+  rename f ()J readVarLong
+
+class $nms.Packet
+  rename a (L$nms/PacketDataSerializer;)V read
+  rename b (L$nms/PacketDataSerializer;)V write
+
+class $nms.PacketPlayOutChat
+  accessor a getComponent setComponent
+  accessor b getPositionIndex setPositionIndex

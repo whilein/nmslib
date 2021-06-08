@@ -14,25 +14,17 @@
  *    limitations under the License.
  */
 
-package nmslib.api.nms;
+package nmslib.api.annotation;
 
-import nmslib.api.annotation.FactoryMethod;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author whilein
  */
-public interface NBTTagByteArray extends NBTBase {
-
-    @FactoryMethod
-    static NBTTagByteArray create() {
-        throw new UnsupportedOperationException();
-    }
-
-    @FactoryMethod
-    static NBTTagByteArray create(final byte[] value) {
-        throw new UnsupportedOperationException();
-    }
-
-    byte[] getData();
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface FactoryMethod {
 }

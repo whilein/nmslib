@@ -17,8 +17,8 @@ class $nms.NBTTagString
 
 class $nms.NBTTagList
   rename f ()I getListType
-  rename a (IL$nms.NBTBase;)V setElement
-  rename a (I)L$nms.NBTBase; removeElement
+  rename a (IL$nms/NBTBase;)V setElement
+  rename a (I)L$nms/NBTBase; removeElement
   rename g getElement
   rename add addElement
 

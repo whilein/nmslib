@@ -18,8 +18,10 @@ package nmslib;
 
 import lombok.val;
 import nmslib.api.annotation.FieldGenerated;
+import nmslib.api.cb.entity.CraftPlayer;
 import nmslib.api.hook.AgentHook;
 import nmslib.api.nms.*;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -99,6 +101,19 @@ public final class Main extends JavaPlugin {
                 getLogger().info("NBTTagString: " + NBTTagString.create("String Value"));
                 break;
             }
+            case "test-packets": {
+                val player = Bukkit.getPlayerExact(args[0]);
+                val craftPlayer = (CraftPlayer) player;
+                val entityPlayer = craftPlayer.getHandle();
+
+                entityPlayer.getPlayerConnection().sendPacket(
+                        PacketPlayOutChat.create(
+                                ChatComponentText.create("Hello world!"),
+                                PacketPlayOutChat.Position.HOTBAR
+                        )
+                );
+                break;
+            }
             case "test-enums": {
                 getLogger().info("EnumChatFormat: ");
 
@@ -134,23 +149,29 @@ public final class Main extends JavaPlugin {
             final Class<?> api,
             final Class<?> nms
     ) {
-        boolean implemented = false;
+        boolean implemented = nms.getSuperclass() == api;
 
-        for (Class<?> implementation : nms.getInterfaces()) {
-            if (implementation == api) {
-                implemented = true;
-                break;
+        if (!implemented) {
+            for (Class<?> implementation : nms.getInterfaces()) {
+                if (implementation == api) {
+                    implemented = true;
+                    break;
+                }
             }
         }
 
         if (!implemented) {
-            getLogger().info(nms.getName() + " does not implements " + api.getName());
+            getLogger().info(nms.getName() + " does not implements/extends " + api.getName());
             return;
         }
 
         for (val apiMethod : api.getDeclaredMethods()) {
             if (Modifier.isStatic(apiMethod.getModifiers()))
                 continue;
+
+            if (!Modifier.isAbstract(apiMethod.getModifiers())) {
+                continue;
+            }
 
             if (apiMethod.isBridge())
                 continue;

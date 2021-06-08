@@ -17,7 +17,6 @@
 package nmslib.agent.patch;
 
 import nmslib.agent.output.Output;
-import nmslib.agent.patch.asm.VisitorLinker;
 import nmslib.agent.target.MethodTarget;
 import nmslib.api.ProxyResolver;
 import org.objectweb.asm.Type;
@@ -30,13 +29,15 @@ public interface PatchClass {
     String getName();
     Patch getPatch();
 
-    void addLinker(VisitorLinker visitorLinker);
     void renameMethod(MethodTarget target, String proxyMethod);
 
     void fieldSetter(String field, String setter);
     void fieldGetter(String field, String getter);
 
+    void factory(String produces);
+
     void implement(Type type);
+    void extend(Type type);
 
     byte[] patch(ProxyResolver resolver, Output output, byte[] bytes) throws Exception;
 

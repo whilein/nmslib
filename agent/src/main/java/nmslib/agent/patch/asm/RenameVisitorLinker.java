@@ -65,7 +65,7 @@ public final class RenameVisitorLinker implements VisitorLinker {
                 this.signature = signature;
                 this.isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
 
-                super.visit(Opcodes.V1_8, access, name, signature, superName, interfaces);
+                super.visit(access, access, name, signature, superName, interfaces);
             }
 
             @Override

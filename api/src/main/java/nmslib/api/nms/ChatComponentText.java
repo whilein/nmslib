@@ -16,11 +16,14 @@
 
 package nmslib.api.nms;
 
+import nmslib.api.annotation.FactoryMethod;
+
 /**
  * @author whilein
  */
 public interface ChatComponentText extends IChatBaseComponent {
 
+    @FactoryMethod
     static ChatComponentText create(final String text) {
         throw new UnsupportedOperationException();
     }

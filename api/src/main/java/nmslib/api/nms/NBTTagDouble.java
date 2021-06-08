@@ -16,15 +16,19 @@
 
 package nmslib.api.nms;
 
+import nmslib.api.annotation.FactoryMethod;
+
 /**
  * @author whilein
  */
 public interface NBTTagDouble extends NBTBase.NBTNumber {
 
+    @FactoryMethod
     static NBTTagDouble create() {
         throw new UnsupportedOperationException();
     }
 
+    @FactoryMethod
     static NBTTagDouble create(final double value) {
         throw new UnsupportedOperationException();
     }

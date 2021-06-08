@@ -16,23 +16,11 @@
 
 package nmslib.api.nms;
 
-import nmslib.api.annotation.FactoryMethod;
-
 /**
  * @author whilein
  */
-public interface NBTTagByteArray extends NBTBase {
+public interface PlayerConnection {
 
-    @FactoryMethod
-    static NBTTagByteArray create() {
-        throw new UnsupportedOperationException();
-    }
-
-    @FactoryMethod
-    static NBTTagByteArray create(final byte[] value) {
-        throw new UnsupportedOperationException();
-    }
-
-    byte[] getData();
+    void sendPacket(Packet packet);
 
 }

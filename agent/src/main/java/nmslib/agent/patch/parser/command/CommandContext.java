@@ -14,25 +14,21 @@
  *    limitations under the License.
  */
 
-package nmslib.api.nms;
+package nmslib.agent.patch.parser.command;
 
-import nmslib.api.annotation.FactoryMethod;
+import nmslib.agent.patch.Patch;
+import nmslib.agent.patch.PatchClass;
+import nmslib.api.Version;
 
 /**
  * @author whilein
  */
-public interface NBTTagByteArray extends NBTBase {
+public interface CommandContext {
 
-    @FactoryMethod
-    static NBTTagByteArray create() {
-        throw new UnsupportedOperationException();
-    }
+    Patch getPatch();
+    Version getVersion();
 
-    @FactoryMethod
-    static NBTTagByteArray create(final byte[] value) {
-        throw new UnsupportedOperationException();
-    }
-
-    byte[] getData();
+    PatchClass getPatchClass();
+    void setPatchClass(PatchClass patchClass);
 
 }

@@ -46,12 +46,13 @@ public final class ImplementVisitorLinker implements VisitorLinker {
     public ClassVisitor link(final ClassVisitor visitor, final Output output, final PatchClass patch) {
         return new ClassVisitor(Opcodes.ASM9, visitor) {
             @Override
-            public void visit(final int version,
-                              final int access,
-                              final String name,
-                              final String signature,
-                              final String superName,
-                              final String[] interfaces
+            public void visit(
+                    final int version,
+                    final int access,
+                    final String name,
+                    final String signature,
+                    final String superName,
+                    final String[] interfaces
             ) {
                 val newSignature = signature == null ? null : signature + type.getDescriptor();
                 val newInterfaces = Arrays.copyOf(interfaces, interfaces.length + 1);

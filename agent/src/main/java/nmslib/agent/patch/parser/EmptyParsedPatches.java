@@ -14,25 +14,33 @@
  *    limitations under the License.
  */
 
-package nmslib.api.nms;
+package nmslib.agent.patch.parser;
 
-import nmslib.api.annotation.FactoryMethod;
+import nmslib.agent.patch.Patch;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author whilein
  */
-public interface NBTTagByteArray extends NBTBase {
+public final class EmptyParsedPatches implements ParsedPatches {
 
-    @FactoryMethod
-    static NBTTagByteArray create() {
-        throw new UnsupportedOperationException();
+    public static final ParsedPatches INSTANCE = new EmptyParsedPatches();
+
+    @Override
+    public void apply(final Patch patch) {
     }
 
-    @FactoryMethod
-    static NBTTagByteArray create(final byte[] value) {
-        throw new UnsupportedOperationException();
+    @Override
+    public List<String[]> getCommands() {
+        return Collections.emptyList();
     }
 
-    byte[] getData();
+    @Override
+    public Map<String, ParsedPatches> getPatches() {
+        return Collections.emptyMap();
+    }
 
 }

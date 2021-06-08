@@ -14,25 +14,23 @@
  *    limitations under the License.
  */
 
-package nmslib.api.nms;
+package nmslib.agent.patch.parser.command;
 
-import nmslib.api.annotation.FactoryMethod;
+import nmslib.api.Version;
 
 /**
  * @author whilein
  */
-public interface NBTTagByteArray extends NBTBase {
+public interface Command {
 
-    @FactoryMethod
-    static NBTTagByteArray create() {
-        throw new UnsupportedOperationException();
+    String getName();
+
+    void execute(CommandContext ctx, String[] args);
+
+    default String replaceKeys(final String to, final Version version) {
+        return to.replace('.', '/')
+                .replace("$nms", "net/minecraft/server/" + version.getName())
+                .replace("$cb", "org/bukkit/craftbukkit/" + version.getName())
+                .replace("$api", "nmslib/api");
     }
-
-    @FactoryMethod
-    static NBTTagByteArray create(final byte[] value) {
-        throw new UnsupportedOperationException();
-    }
-
-    byte[] getData();
-
 }

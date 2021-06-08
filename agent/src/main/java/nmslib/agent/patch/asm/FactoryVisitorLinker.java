@@ -24,10 +24,7 @@ import lombok.val;
 import nmslib.agent.output.Output;
 import nmslib.agent.patch.PatchClass;
 import nmslib.agent.util.AsmUtils;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
+import org.objectweb.asm.*;
 
 import java.util.Arrays;
 
@@ -37,8 +34,6 @@ import java.util.Arrays;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FactoryVisitorLinker implements VisitorLinker {
-
-    private static final MethodVisitor EMPTY = new MethodVisitor(Opcodes.ASM9) {};
 
     String produces;
 
@@ -50,7 +45,7 @@ public final class FactoryVisitorLinker implements VisitorLinker {
     public ClassVisitor link(final ClassVisitor visitor, final Output output, final PatchClass patch) {
         return new ClassVisitor(Opcodes.ASM9, visitor) {
 
-            String name;
+            String factoryName;
 
             @Override
             public void visit(
@@ -61,33 +56,24 @@ public final class FactoryVisitorLinker implements VisitorLinker {
                     final String superName,
                     final String[] interfaces
             ) {
-                this.name = name;
+                this.factoryName = name;
 
                 super.visit(version, access, name, signature, superName, interfaces);
             }
 
-            @Override
-            public MethodVisitor visitMethod(
-                    final int access,
+            private void createMethod(
                     final String name,
                     final String descriptor,
-                    final String signature,
-                    final String[] exceptions
+                    final MethodVisitor method
             ) {
-                if ((access & Opcodes.ACC_STATIC) == 0 || name.equals("<clinit>")) {
-                    return super.visitMethod(access, name, descriptor, signature, exceptions);
-                }
-
-                val method = super.visitMethod(access, name, descriptor, signature, exceptions);
                 method.visitCode();
-
-                if (name.equals("valueOf") && descriptor.equals("(Ljava/lang/String;)L" + this.name + ";")) {
+                if (name.equals("valueOf") && descriptor.equals("(Ljava/lang/String;)L" + factoryName + ";")) {
                     method.visitVarInsn(Opcodes.ALOAD, 0);
                     method.visitMethodInsn(Opcodes.INVOKESTATIC, produces, name,
                             "(Ljava/lang/String;)L" + produces + ";", false);
                     method.visitMaxs(1, 2);
 
-                    output.log("[nms/Factory] [" + this.name + "] Add valueOf method which references to "
+                    output.log("[nms/Factory] [" + factoryName + "] Add valueOf method which references to "
                             + produces.replace('/', '.') + "#" + name);
                 } else {
                     val resolver = patch.getPatch().getProxyRegistry();
@@ -121,16 +107,42 @@ public final class FactoryVisitorLinker implements VisitorLinker {
 
                     method.visitMaxs(pos + 2, pos);
 
-                   output.log("[nms/Factory] [" + this.name + "] Use factory method " + name
+                    output.log("[nms/Factory] [" + factoryName + "] Use factory method " + name
                             + " to create " + produces
                             + " " + Arrays.toString(params) + " -> " + Arrays.toString(fixParams));
                 }
 
                 method.visitInsn(Opcodes.ARETURN);
                 method.visitEnd();
+            }
 
-                return EMPTY;
+            @Override
+            public MethodVisitor visitMethod(
+                    final int access,
+                    final String name,
+                    final String descriptor,
+                    final String signature,
+                    final String[] exceptions
+            ) {
+                val method = super.visitMethod(access, name, descriptor, signature, exceptions);
+
+                if ((access & Opcodes.ACC_STATIC) == 0 || name.equals("<clinit>")) {
+                    return method;
+                }
+
+                return new MethodVisitor(Opcodes.ASM9, method) {
+                    @Override
+                    public AnnotationVisitor visitAnnotation(final String annotationDescriptor, final boolean visible) {
+                        if (annotationDescriptor.equals("Lnmslib/api/annotation/FactoryMethod;")) {
+                            createMethod(name, descriptor, mv);
+                            mv = null;
+                        }
+
+                        return super.visitAnnotation(annotationDescriptor, visible);
+                    }
+                };
             }
         };
     }
+
 }

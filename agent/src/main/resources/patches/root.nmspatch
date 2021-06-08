@@ -1,5 +1,6 @@
 include entity-nms
 include entity-cb
+include packet
 include chat
 include nbt
 
@@ -16,6 +17,9 @@ class $nms.PlayerInventory
   accessor items
   accessor armor
   getter player
+
+class $nms.PlayerConnection
+  implement $api.nms.PlayerConnection
 
 version v1_8_R3
   include 1.8.8/root

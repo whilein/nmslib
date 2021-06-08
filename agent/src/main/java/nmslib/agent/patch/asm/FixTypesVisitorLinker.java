@@ -53,7 +53,7 @@ public final class FixTypesVisitorLinker implements VisitorLinker {
                     final String superName,
                     final String[] interfaces
             ) {
-                super.visit(version, access, name, signature, superName, interfaces);
+                super.visit(Opcodes.V1_8, access, name, signature, superName, interfaces);
 
                 this.name = name;
             }

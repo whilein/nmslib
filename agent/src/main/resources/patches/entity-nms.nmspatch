@@ -1,5 +1,6 @@
 class $nms.EntityPlayer
   implement $api.nms.EntityPlayer
+  getter playerConnection
 
 class $nms.EntityHuman
   implement $api.nms.EntityHuman

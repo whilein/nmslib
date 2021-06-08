@@ -1,0 +1,8 @@
+class $nms.PacketDataSerializer
+  extend $api.nms.PacketDataSerializer
+
+class $nms.Packet
+  implement $api.nms.Packet
+
+class $nms.PacketPlayOutChat
+  implement $api.nms.PacketPlayOutChat

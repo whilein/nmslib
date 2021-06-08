@@ -21,7 +21,7 @@ import nmslib.agent.output.DebugOutput;
 import nmslib.agent.output.NoneOutput;
 import nmslib.agent.output.Output;
 import nmslib.agent.output.SoutOutput;
-import nmslib.agent.patch.reader.MinecraftPatchReader;
+import nmslib.agent.patch.parser.MinecraftPatchParser;
 import nmslib.agent.patch.resolver.ResourcePatchResolver;
 import nmslib.api.hook.AgentHookProvider;
 
@@ -52,7 +52,7 @@ public final class AgentMain {
         }
 
         val classPatcher = AgentClassPatcher.create(
-                MinecraftPatchReader.create(
+                MinecraftPatchParser.create(
                         ResourcePatchResolver.create("patches/", ".nmspatch")
                 ),
                 output

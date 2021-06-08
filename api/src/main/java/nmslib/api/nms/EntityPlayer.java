@@ -21,4 +21,6 @@ package nmslib.api.nms;
  */
 public interface EntityPlayer extends EntityHuman {
 
+    PlayerConnection getPlayerConnection();
+
 }

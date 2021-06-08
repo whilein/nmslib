@@ -14,25 +14,35 @@
  *    limitations under the License.
  */
 
-package nmslib.api.nms;
+package nmslib.agent.patch.parser.command;
 
-import nmslib.api.annotation.FactoryMethod;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import nmslib.agent.patch.Patch;
+import nmslib.agent.patch.PatchClass;
+import nmslib.api.Version;
 
 /**
  * @author whilein
  */
-public interface NBTTagByteArray extends NBTBase {
+@Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public final class SimpleCommandContext implements CommandContext {
 
-    @FactoryMethod
-    static NBTTagByteArray create() {
-        throw new UnsupportedOperationException();
+    final Patch patch;
+
+    @Setter
+    PatchClass patchClass;
+
+    public static CommandContext create(
+            final @NonNull Patch patch
+    ) {
+        return new SimpleCommandContext(patch);
     }
 
-    @FactoryMethod
-    static NBTTagByteArray create(final byte[] value) {
-        throw new UnsupportedOperationException();
+    @Override
+    public Version getVersion() {
+        return patch.getVersion();
     }
-
-    byte[] getData();
-
 }

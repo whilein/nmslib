@@ -55,11 +55,16 @@ public final class MinecraftPatchClass implements PatchClass {
     @Override
     public void implement(final Type type) {
         addLinker(ImplementVisitorLinker.create(type));
-        patch.forClass(type.getInternalName()).addLinker(FactoryVisitorLinker.create(name));
+        patch.forClass(type.getInternalName()).factory(name);
     }
 
     @Override
-    public void addLinker(final VisitorLinker visitorLinker) {
+    public void extend(final Type type) {
+        addLinker(ExtendVisitorLinker.create(type));
+        patch.forClass(type.getInternalName()).factory(name);
+    }
+
+    private void addLinker(final VisitorLinker visitorLinker) {
         visitorLinkers.add(visitorLinker);
     }
 
@@ -74,6 +79,11 @@ public final class MinecraftPatchClass implements PatchClass {
     @Override
     public void fieldGetter(final String field, final String getter) {
         addLinker(GetterVisitorLinker.create(field, getter));
+    }
+
+    @Override
+    public void factory(final String produces) {
+        addLinker(FactoryVisitorLinker.create(produces));
     }
 
     @Override

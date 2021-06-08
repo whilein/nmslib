@@ -14,31 +14,14 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.patch;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+package nmslib.agent.patch.parser.command;
 
 /**
  * @author whilein
  */
-public final class EmptyParsedPatches implements ParsedPatches {
+public interface CommandManager {
 
-    public static final ParsedPatches INSTANCE = new EmptyParsedPatches();
-
-    @Override
-    public void apply(final Patch patch) {
-    }
-
-    @Override
-    public List<String[]> getCommands() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public Map<String, ParsedPatches> getPatches() {
-        return Collections.emptyMap();
-    }
+    void add(Command command);
+    void process(String[] command, CommandContext context);
 
 }

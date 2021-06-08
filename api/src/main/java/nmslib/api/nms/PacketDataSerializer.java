@@ -16,23 +16,21 @@
 
 package nmslib.api.nms;
 
-import nmslib.api.annotation.FactoryMethod;
+import io.netty.buffer.ByteBuf;
+
+import java.util.UUID;
 
 /**
  * @author whilein
  */
-public interface NBTTagByteArray extends NBTBase {
+public abstract class PacketDataSerializer extends ByteBuf {
 
-    @FactoryMethod
-    static NBTTagByteArray create() {
-        throw new UnsupportedOperationException();
-    }
+    public abstract void writeVarLong(long value);
+    public abstract void writeVarInt(int value);
+    public abstract void writeUUID(UUID value);
 
-    @FactoryMethod
-    static NBTTagByteArray create(final byte[] value) {
-        throw new UnsupportedOperationException();
-    }
-
-    byte[] getData();
+    public abstract long readVarLong();
+    public abstract int readVarInt();
+    public abstract UUID readUUID();
 
 }

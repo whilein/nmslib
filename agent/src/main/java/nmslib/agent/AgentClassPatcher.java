@@ -24,7 +24,7 @@ import lombok.val;
 import nmslib.agent.output.Output;
 import nmslib.agent.patch.MinecraftPatch;
 import nmslib.agent.patch.Patch;
-import nmslib.agent.patch.reader.PatchReader;
+import nmslib.agent.patch.parser.PatchParser;
 import nmslib.api.ProxyResolver;
 import nmslib.api.Version;
 
@@ -48,10 +48,10 @@ public final class AgentClassPatcher implements ClassPatcher {
     @Getter
     boolean notSupported;
 
-    final PatchReader patchReader;
+    final PatchParser patchParser;
     final Output output;
 
-    public static ClassPatcher create(final PatchReader reader, final Output output) {
+    public static ClassPatcher create(final PatchParser reader, final Output output) {
         return new AgentClassPatcher(reader, output);
     }
 
@@ -74,7 +74,7 @@ public final class AgentClassPatcher implements ClassPatcher {
 
                     patch = MinecraftPatch.create(version, SimpleProxyRegistry.create());
 
-                    val parsedPatch = patchReader.read("root");
+                    val parsedPatch = patchParser.read("root");
                     parsedPatch.apply(patch);
 
                     patchesCount = patch.countPatches();

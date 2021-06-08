@@ -16,6 +16,8 @@
 
 package nmslib.api.nms;
 
+import nmslib.api.annotation.FactoryMethod;
+
 import java.util.Set;
 
 /**
@@ -23,6 +25,7 @@ import java.util.Set;
  */
 public interface NBTTagCompound extends NBTBase {
 
+    @FactoryMethod
     static NBTTagCompound create() {
         throw new UnsupportedOperationException();
     }
