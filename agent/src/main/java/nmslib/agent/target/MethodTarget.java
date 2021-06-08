@@ -14,14 +14,13 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.patch.proxy;
+package nmslib.agent.target;
 
 /**
  * @author whilein
  */
-public interface ProxyRegistry {
+public interface MethodTarget {
 
-    ProxyRegistry addProxy(String name, String proxy);
-    String getProxy(String name);
-    
+    boolean matches(String descriptor, String methodName);
+
 }

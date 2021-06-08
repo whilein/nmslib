@@ -14,31 +14,25 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.patch.proxy;
+package nmslib.agent.output;
 
-import javassist.CtClass;
 import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import lombok.NoArgsConstructor;
 
 /**
  * @author whilein
  */
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MethodNameProxyTarget implements ProxyTarget {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class SoutOutput implements Output {
 
-    @Getter
-    String methodName;
+    public static final Output INSTANCE = new SoutOutput();
 
     @Override
-    public boolean matches(final CtClass returnType, final CtClass[] params, final String methodName) {
-        return methodName.equals(this.methodName);
+    public void logClass(final byte[] bytecode, final String name) {
     }
 
-    public static ProxyTarget create(final String name) {
-        return new MethodNameProxyTarget(name);
+    @Override
+    public void log(final String text) {
+        System.out.println(text);
     }
-
 }

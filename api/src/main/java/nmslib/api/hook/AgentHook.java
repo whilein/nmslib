@@ -14,15 +14,25 @@
  *    limitations under the License.
  */
 
-package nmslib.api.nms;
+package nmslib.api.hook;
 
-import nmslib.api.annotation.FieldGenerated;
+import nmslib.api.ProxyResolver;
+import nmslib.api.Version;
 
 /**
  * @author whilein
  */
-public interface EntityHuman extends EntityLiving {
+public interface AgentHook {
 
-    @FieldGenerated
-    PlayerInventory getInventory();
+    static AgentHook getInstance() {
+        return AgentHookProvider.get();
+    }
+
+    Version getVersion();
+
+    boolean isNotSupported();
+    int getPatchesCount();
+
+    ProxyResolver getProxyResolver();
+
 }

@@ -2,3 +2,8 @@ name: NmsLib
 main: nmslib.Main
 version: ${version}
 author: Whilein
+
+commands:
+  test-factories: {}
+  test-patchers: {}
+  test-enums: {}

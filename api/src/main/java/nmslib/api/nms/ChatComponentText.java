@@ -14,16 +14,15 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.patch.proxy;
-
-import javassist.CtClass;
+package nmslib.api.nms;
 
 /**
  * @author whilein
  */
-public interface ProxyTarget {
+public interface ChatComponentText extends IChatBaseComponent {
 
-    String getMethodName();
-    boolean matches(CtClass returnType, CtClass[] params, String methodName);
+    static ChatComponentText create(final String text) {
+        throw new UnsupportedOperationException();
+    }
 
 }

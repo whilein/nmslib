@@ -63,12 +63,39 @@ public final class MinecraftPatchReader implements PatchReader {
 
         int ch;
         boolean str = false;
+        boolean mstr = false;
         boolean brackets = false;
         boolean lineJustBegun = true;
 
         while ((ch = is.read()) != -1) {
-            if (ch == '"') {
+            if ((ch == '\r' || ch == '\n') && str && !mstr) {
+                throw new IllegalStateException("Cannot use line feed or carriage return in string");
+            }
+
+            if (ch == '>' && !mstr && !str) {
+                str = true;
+                mstr = true;
+                continue;
+            }
+
+            if (ch == '<' && mstr) {
+                str = false;
+                mstr = false;
+
+                val oldValue = buf.toString();
+                buf.setLength(0);
+
+                buf.append(
+                        oldValue.replace("\n", "")
+                                .replace("\r", "")
+                );
+
+                continue;
+            }
+
+            if (ch == '"' && !mstr) {
                 str = !str;
+                mstr = false;
                 continue;
             }
 
@@ -88,7 +115,7 @@ public final class MinecraftPatchReader implements PatchReader {
                 }
 
                 if (buf.length() != 0) {
-                    lineTokens.add(buf.toString());
+                    lineTokens.add(buf.toString().trim());
                     buf.setLength(0);
                 }
 

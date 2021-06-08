@@ -16,8 +16,8 @@
 
 package nmslib.agent.patch;
 
-import nmslib.agent.patch.proxy.ProxyRegistry;
-import nmslib.agent.version.Version;
+import nmslib.api.ProxyRegistry;
+import nmslib.api.Version;
 
 import java.util.Optional;
 
@@ -32,6 +32,6 @@ public interface Patch {
     Version getVersion();
 
     PatchClass forClass(String name);
-    Optional<PatchClass> findMatches(String name);
+    Optional<PatchClass> get(String name);
 
 }

@@ -21,8 +21,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import nmslib.agent.patch.proxy.ProxyRegistry;
-import nmslib.agent.version.Version;
+import nmslib.api.ProxyRegistry;
+import nmslib.api.Version;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +69,7 @@ public final class MinecraftPatch implements Patch {
     }
 
     @Override
-    public Optional<PatchClass> findMatches(final String name) {
+    public Optional<PatchClass> get(final String name) {
         return Optional.ofNullable(classes.get(name));
     }
 

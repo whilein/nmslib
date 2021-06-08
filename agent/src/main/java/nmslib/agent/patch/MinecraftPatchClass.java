@@ -21,12 +21,17 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import nmslib.agent.AgentContext;
-import nmslib.agent.patch.javassist.*;
-import nmslib.agent.patch.proxy.ProxyTarget;
+import nmslib.agent.output.Output;
+import nmslib.agent.patch.asm.*;
+import nmslib.agent.target.MethodTarget;
+import nmslib.api.ProxyResolver;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Type;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author whilein
@@ -35,57 +40,69 @@ import java.util.Set;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MinecraftPatchClass implements PatchClass {
 
+    @Getter
     String name;
 
     @Getter
     Patch patch;
 
-    Set<JavassistClassPatcher> patchers;
+    List<VisitorLinker> visitorLinkers;
 
     public static PatchClass create(final String name, final Patch patch) {
-        return new MinecraftPatchClass(name, patch, new LinkedHashSet<>());
+        return new MinecraftPatchClass(name, patch, new ArrayList<>());
     }
 
     @Override
-    public PatchClass implement(final String type) {
-        patch.forClass(type).patch(FactoryPatcher.create(name));
-        return patch(ImplementPatcher.create(type));
+    public void implement(final Type type) {
+        addLinker(ImplementVisitorLinker.create(type));
+        patch.forClass(type.getInternalName()).addLinker(FactoryVisitorLinker.create(name));
     }
 
     @Override
-    public PatchClass patch(final JavassistClassPatcher patcher) {
-        patchers.add(patcher);
-        return this;
+    public void addLinker(final VisitorLinker visitorLinker) {
+        visitorLinkers.add(visitorLinker);
     }
 
     @Override
-    public PatchClass proxyMethod(
-            final ProxyTarget target,
+    public void renameMethod(
+            final MethodTarget target,
             final String proxyName
     ) {
-        return patch(ProxyPatcher.create(target, proxyName));
+        addLinker(RenameVisitorLinker.create(target, proxyName));
     }
 
     @Override
-    public PatchClass fieldGetter(final String field, final String getter) {
-        return patch(GetterPatcher.create(field, getter));
+    public void fieldGetter(final String field, final String getter) {
+        addLinker(GetterVisitorLinker.create(field, getter));
     }
 
     @Override
-    public PatchClass fieldSetter(final String field, final String setter) {
-        return patch(SetterPatcher.create(field, setter));
+    public void fieldSetter(final String field, final String setter) {
+        addLinker(SetterVisitorLinker.create(field, setter));
     }
 
     @Override
-    public void patch(final AgentContext ctx) throws Exception {
-        for (val patcher : patchers) {
-            patcher.patch(ctx);
+    public byte[] patch(final ProxyResolver resolver, final Output output, final byte[] input) throws Exception {
+        val reader = new ClassReader(input);
+        val writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+
+        ClassVisitor visitor = FixTypesVisitorLinker.INSTANCE.link(writer, output, this);
+
+        for (val linker : visitorLinkers) {
+            visitor = linker.link(visitor, output, this);
         }
+
+        reader.accept(visitor, 0);
+
+        val bytes=  writer.toByteArray();
+        output.logClass(bytes, name);
+
+        return bytes;
     }
 
     @Override
     public int countPatches() {
-        return patchers.size();
+        return visitorLinkers.size();
     }
 
 }

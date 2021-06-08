@@ -16,20 +16,32 @@
 
 package nmslib.api.nms;
 
+import nmslib.api.annotation.FieldGenerated;
+
 /**
  * @author whilein
  */
 public interface PlayerInventory {
 
+    @FieldGenerated
     EntityHuman getPlayer();
 
+    @FieldGenerated
     ItemStack[] getItems();
+
+    @FieldGenerated
     ItemStack[] getArmor();
 
+    @FieldGenerated
     void setItems(ItemStack[] items);
+
+    @FieldGenerated
     void setArmor(ItemStack[] armor);
 
+    @FieldGenerated
     int getItemInHandIndex();
+
+    @FieldGenerated
     void setItemInHandIndex(int value);
 
     ItemStack getItemInHand();

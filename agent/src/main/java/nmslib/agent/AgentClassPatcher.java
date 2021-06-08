@@ -16,19 +16,18 @@
 
 package nmslib.agent;
 
-import javassist.ClassPool;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
+import nmslib.agent.output.Output;
 import nmslib.agent.patch.MinecraftPatch;
 import nmslib.agent.patch.Patch;
-import nmslib.agent.patch.proxy.SimpleProxyRegistry;
 import nmslib.agent.patch.reader.PatchReader;
-import nmslib.agent.version.MinecraftVersion;
-import nmslib.agent.version.Version;
+import nmslib.api.ProxyResolver;
+import nmslib.api.Version;
 
-import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 
 /**
@@ -36,73 +35,69 @@ import java.security.ProtectionDomain;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class AgentClassPatcher implements ClassFileTransformer {
+public final class AgentClassPatcher implements ClassPatcher {
 
     Patch patch;
+
+    @Getter
+    int patchesCount;
+
+    @Getter
     Version version;
+
+    @Getter
     boolean notSupported;
 
     final PatchReader patchReader;
-    final ClassPool classPool;
+    final Output output;
 
-    public static ClassFileTransformer create(final PatchReader reader) {
-        return new AgentClassPatcher(reader, ClassPool.getDefault());
+    public static ClassPatcher create(final PatchReader reader, final Output output) {
+        return new AgentClassPatcher(reader, output);
     }
 
     @Override
     public byte[] transform(
             final ClassLoader loader,
-            final String className,
+            final String name,
             final Class<?> classBeingRedefined,
             final ProtectionDomain protectionDomain,
             final byte[] classfileBuffer
     ) {
-        if (notSupported) {
+        if (notSupported || name == null) {
             return null;
         }
 
         try {
-            if (className != null) {
-                val name = className.replace('/', '.');
+            if (patch == null) {
+                if (name.startsWith("net/minecraft/server/")) {
+                    version = MinecraftVersion.getByName(name.split("/")[3]);
 
-                if (patch == null) {
-                    if (name.startsWith("net.minecraft.server.")) {
-                        version = MinecraftVersion.getByName(name.split("\\.")[3]);
+                    patch = MinecraftPatch.create(version, SimpleProxyRegistry.create());
 
-                        patch = MinecraftPatch.create(version, SimpleProxyRegistry.create());
+                    val parsedPatch = patchReader.read("root");
+                    parsedPatch.apply(patch);
 
-                        val parsedPatch = patchReader.read("root");
-                        parsedPatch.apply(patch);
+                    patchesCount = patch.countPatches();
+                    notSupported = patchesCount == 0;
 
-                        val patches = patch.countPatches();
-                        notSupported = patches == 0;
+                    output.log(
+                            "[nms/Init] Version detected { name = " + version
+                                    + (notSupported ? ", notSupported" : ", patches = " + patchesCount)
+                                    + " }"
+                    );
 
-                        System.out.println(
-                                "Version detected { name = " + version
-                                        + (notSupported ? ", notSupported" : ", patches = " + patches)
-                                        + " }"
-                        );
-
-                        if (notSupported) {
-                            return null;
-                        }
-                    } else {
+                    if (notSupported) {
                         return null;
                     }
+                } else {
+                    return null;
                 }
+            }
 
-                val patchClass = patch.findMatches(name).orElse(null);
+            val patchClass = patch.get(name).orElse(null);
 
-                if (patchClass != null) {
-                    val ctClass = classPool.get(name);
-
-                    patchClass.patch(SimpleAgentContext.create(version, patch.getProxyRegistry(), classPool, ctClass));
-
-                    val result = ctClass.toBytecode();
-                    ctClass.detach();
-
-                    return result;
-                }
+            if (patchClass != null) {
+                return patchClass.patch(patch.getProxyRegistry(), output, classfileBuffer);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,4 +106,12 @@ public final class AgentClassPatcher implements ClassFileTransformer {
         return null;
     }
 
+    @Override
+    public ProxyResolver getProxyResolver() {
+        if (notSupported) {
+            throw new UnsupportedOperationException();
+        }
+
+        return patch.getProxyRegistry();
+    }
 }

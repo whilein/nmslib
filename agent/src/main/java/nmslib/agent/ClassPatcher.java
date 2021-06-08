@@ -14,15 +14,14 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.patch.javassist;
+package nmslib.agent;
 
-import nmslib.agent.AgentContext;
+import nmslib.api.hook.AgentHook;
+
+import java.lang.instrument.ClassFileTransformer;
 
 /**
  * @author whilein
  */
-public interface JavassistClassPatcher {
-
-    void patch(AgentContext ctx) throws Exception;
-
+public interface ClassPatcher extends AgentHook, ClassFileTransformer {
 }

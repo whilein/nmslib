@@ -16,9 +16,16 @@
 
 package nmslib.agent;
 
+import lombok.val;
+import nmslib.agent.output.DebugOutput;
+import nmslib.agent.output.NoneOutput;
+import nmslib.agent.output.Output;
+import nmslib.agent.output.SoutOutput;
 import nmslib.agent.patch.reader.MinecraftPatchReader;
 import nmslib.agent.patch.resolver.ResourcePatchResolver;
+import nmslib.api.hook.AgentHookProvider;
 
+import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 
 /**
@@ -26,12 +33,34 @@ import java.lang.instrument.Instrumentation;
  */
 public final class AgentMain {
 
-    public static void premain(final String agentArgs, final Instrumentation instrumentation) {
-        instrumentation.addTransformer(AgentClassPatcher.create(
+    public static void premain(final String agentArgs, final Instrumentation instrumentation) throws IOException {
+        final Output output;
+
+        if (agentArgs != null) {
+            switch (agentArgs) {
+                case "debug":
+                    output = DebugOutput.create();
+                    break;
+                case "sout":
+                    output = SoutOutput.INSTANCE;
+                    break;
+                default:
+                    output = NoneOutput.INSTANCE;
+            }
+        } else {
+            output = NoneOutput.INSTANCE;
+        }
+
+        val classPatcher = AgentClassPatcher.create(
                 MinecraftPatchReader.create(
                         ResourcePatchResolver.create("patches/", ".nmspatch")
-                )
-        ));
+                ),
+                output
+        );
+
+        instrumentation.addTransformer(classPatcher);
+
+        AgentHookProvider.set(classPatcher);
     }
 
 }

@@ -8,13 +8,15 @@ jar {
 }
 
 shadowJar {
-    relocate("javassist", "nmslib.agent.dep.javassist")
+    relocate("org.objectweb.asm", "nmslib.agent.dep.asm")
 
     destinationDirectory = file("$rootDir/output")
     archiveFileName = "nmslib-patcher.jar"
 }
 
 dependencies {
-    implementation 'org.javassist:javassist:3.28.0-GA'
+    implementation 'org.ow2.asm:asm:9.1'
+    implementation 'org.ow2.asm:asm-util:9.1'
+
     implementation project(":api")
 }

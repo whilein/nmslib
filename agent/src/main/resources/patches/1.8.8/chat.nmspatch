@@ -1,0 +1,2 @@
+class $nms.IChatBaseComponent
+  rename a ()Ljava/util/List; getSiblings

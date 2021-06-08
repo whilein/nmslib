@@ -14,15 +14,28 @@
  *    limitations under the License.
  */
 
-package nmslib.api.nms;
+package nmslib.api.hook;
 
-import nmslib.api.annotation.FieldGenerated;
+import lombok.experimental.UtilityClass;
 
 /**
  * @author whilein
  */
-public interface EntityHuman extends EntityLiving {
+@UtilityClass
+public class AgentHookProvider {
 
-    @FieldGenerated
-    PlayerInventory getInventory();
+    private static AgentHook instance;
+
+    public static AgentHook get() {
+        return instance;
+    }
+
+    public static void set(AgentHook hook) {
+        if (instance != null) {
+            throw new IllegalStateException("Instance already defined");
+        }
+
+        instance = hook;
+    }
+
 }

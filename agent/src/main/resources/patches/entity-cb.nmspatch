@@ -1,0 +1,11 @@
+class $cb.entity.CraftPlayer
+  implement $api.cb.entity.CraftPlayer
+
+class $cb.entity.CraftHumanEntity
+  implement $api.cb.entity.CraftHumanEntity
+
+class $cb.entity.CraftLivingEntity
+  implement $api.cb.entity.CraftLivingEntity
+
+class $cb.entity.CraftEntity
+  implement $api.cb.entity.CraftEntity

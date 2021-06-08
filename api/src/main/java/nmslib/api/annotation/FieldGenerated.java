@@ -14,16 +14,17 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.version;
+package nmslib.api.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author whilein
  */
-public interface Version {
-
-    String getName();
-
-    int getId();
-    int getProtocol();
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface FieldGenerated {
 }

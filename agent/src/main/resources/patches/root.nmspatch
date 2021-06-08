@@ -1,5 +1,21 @@
-include proxy
+include entity-nms
+include entity-cb
+include chat
 include nbt
+
+class $nms.Item
+  implement $api.nms.Item
+
+class $nms.ItemStack
+  implement $api.nms.ItemStack
+  accessor count
+
+class $nms.PlayerInventory
+  implement $api.nms.PlayerInventory
+  accessor itemInHandIndex
+  accessor items
+  accessor armor
+  getter player
 
 version v1_8_R3
   include 1.8.8/root

@@ -14,9 +14,8 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.patch.proxy;
+package nmslib.agent.target;
 
-import javassist.CtClass;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,37 +26,23 @@ import lombok.experimental.FieldDefaults;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ExactProxyTarget implements ProxyTarget {
+public final class NameMethodTarget implements MethodTarget {
 
     @Getter
     String methodName;
-    String returnType;
-    String[] params;
 
     @Override
-    public boolean matches(final CtClass returnType, final CtClass[] params, final String methodName) {
-        return methodName.equals(this.methodName)
-                && returnType.getName().equals(this.returnType)
-                && testParams(params);
+    public String toString() {
+        return "{target=" + methodName + "}";
     }
 
-    private boolean testParams(final CtClass[] params) {
-        if (params.length != this.params.length) return false;
-
-        for (int i = 0; i < params.length; i++) {
-            if (!params[i].getName().equals(this.params[i]))
-                return false;
-        }
-
-        return true;
+    @Override
+    public boolean matches(final String descriptor, final String methodName) {
+        return methodName.equals(this.methodName);
     }
 
-    public static ProxyTarget create(
-            final String methodName,
-            final String returnType,
-            final String... params
-    ) {
-        return new ExactProxyTarget(methodName, returnType, params);
+    public static MethodTarget create(final String name) {
+        return new NameMethodTarget(name);
     }
 
 }

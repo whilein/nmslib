@@ -21,11 +21,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import nmslib.agent.patch.proxy.ExactProxyTarget;
-import nmslib.agent.patch.proxy.MethodNameProxyTarget;
 import nmslib.agent.patch.reader.PatchReader;
-import nmslib.agent.version.Version;
+import nmslib.agent.target.ExactMethodTarget;
+import nmslib.agent.target.NameMethodTarget;
+import nmslib.api.Version;
 import org.apache.commons.lang3.StringUtils;
+import org.objectweb.asm.Type;
 
 import java.io.IOException;
 import java.util.*;
@@ -101,39 +102,11 @@ public final class MinecraftParsedPatches implements ParsedPatches {
         );
     }
 
-    private String[] parseAll(final String[] values, final Version version) {
-        val names = new String[values.length];
-
-        for (int i = 0; i < names.length; i++) {
-            names[i] = parse(values[i], version);
-        }
-
-        return names;
-    }
-
-    private String parse(final String value, final Version version) {
-        val parts = value.split("\\.");
-        val resultParts = new ArrayList<String>();
-
-        for (val part : parts) {
-            if (part.startsWith("$")) {
-                switch (part) {
-                    case "$nms":
-                        resultParts.addAll(Arrays.asList("net", "minecraft", "server", version.getName()));
-                        continue;
-                    case "$cb":
-                        resultParts.addAll(Arrays.asList("org", "bukkit", "craftbukkit", version.getName()));
-                        continue;
-                    case "$api":
-                        resultParts.addAll(Arrays.asList("nmslib", "api"));
-                        continue;
-                }
-            }
-
-            resultParts.add(part);
-        }
-
-        return String.join(".", resultParts);
+    private String replaceKeys(final String to, final Version version) {
+        return to.replace('.', '/')
+                .replace("$nms", "net/minecraft/server/" + version.getName())
+                .replace("$cb", "org/bukkit/craftbukkit/" + version.getName())
+                .replace("$api", "nmslib/api");
     }
 
     @Override
@@ -150,7 +123,7 @@ public final class MinecraftParsedPatches implements ParsedPatches {
                                 + "usage: class <name>");
                     }
 
-                    patchClass = patch.forClass(parse(command[1], version));
+                    patchClass = patch.forClass(replaceKeys(command[1], version));
                     break;
                 case "getter":
                     if (command.length < 2) {
@@ -214,35 +187,31 @@ public final class MinecraftParsedPatches implements ParsedPatches {
                         throw new IllegalStateException("cannot execute 'implement' without 'class'");
                     }
 
-                    patchClass.implement(parse(command[1], version));
-                    break;
-                case "proxy":
-                    if (command.length < 3) {
-                        throw new IllegalStateException("missing args for 'proxy'; "
-                                + "usage: proxy <class 1> <class 2>");
-                    }
+                    val implement = replaceKeys(command[1], version);
 
                     patch.getProxyRegistry().addProxy(
-                            parse(command[1], version),
-                            parse(command[2], version)
+                            patchClass.getName(),
+                            implement
                     );
+
+                    patchClass.implement(Type.getObjectType(implement));
                     break;
-                case "proxym":
+                case "rename":
                     if (command.length < 3) {
-                        throw new IllegalStateException("missing args for 'proxym'; "
-                                + "usage: proxym <method name> [return type] [...params] <proxy name>");
+                        throw new IllegalStateException("missing args for 'rename'; "
+                                + "usage: rename <method name> [descriptor] <new name>");
                     }
 
                     if (patchClass == null) {
-                        throw new IllegalStateException("cannot execute 'proxym' without 'class'");
+                        throw new IllegalStateException("cannot execute 'rename' without 'class'");
                     }
 
-                    patchClass.proxyMethod(command.length > 3
-                                    ? ExactProxyTarget.create(
-                            command[1],
-                            parse(command[2], patch.getVersion()),
-                            parseAll(Arrays.copyOfRange(command, 3, command.length - 1), version)
-                            ) : MethodNameProxyTarget.create(command[1]), command[command.length - 1]
+                    patchClass.renameMethod(
+                            command.length > 3 ? ExactMethodTarget.create(
+                                    command[1],
+                                    replaceKeys(command[2], version)
+                            ) : NameMethodTarget.create(command[1]),
+                            command[command.length - 1]
                     );
 
                     break;

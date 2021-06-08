@@ -14,13 +14,14 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.version;
+package nmslib.agent;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
+import nmslib.api.Version;
 
 import java.util.Collections;
 import java.util.HashMap;

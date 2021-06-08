@@ -16,26 +16,29 @@
 
 package nmslib.agent.patch;
 
-import nmslib.agent.AgentContext;
-import nmslib.agent.patch.javassist.JavassistClassPatcher;
-import nmslib.agent.patch.proxy.ProxyTarget;
+import nmslib.agent.output.Output;
+import nmslib.agent.patch.asm.VisitorLinker;
+import nmslib.agent.target.MethodTarget;
+import nmslib.api.ProxyResolver;
+import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
 public interface PatchClass {
 
+    String getName();
     Patch getPatch();
 
-    PatchClass patch(JavassistClassPatcher patcher);
-    PatchClass proxyMethod(ProxyTarget name, String proxyName);
+    void addLinker(VisitorLinker visitorLinker);
+    void renameMethod(MethodTarget target, String proxyMethod);
 
-    PatchClass fieldSetter(String field, String setter);
-    PatchClass fieldGetter(String field, String getter);
+    void fieldSetter(String field, String setter);
+    void fieldGetter(String field, String getter);
 
-    PatchClass implement(String name);
+    void implement(Type type);
 
-    void patch(AgentContext ctx) throws Exception;
+    byte[] patch(ProxyResolver resolver, Output output, byte[] bytes) throws Exception;
 
     int countPatches();
 

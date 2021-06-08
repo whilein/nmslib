@@ -14,15 +14,17 @@
  *    limitations under the License.
  */
 
-package nmslib.api.nms;
+package nmslib.agent.patch.asm;
 
-import nmslib.api.annotation.FieldGenerated;
+import nmslib.agent.output.Output;
+import nmslib.agent.patch.PatchClass;
+import org.objectweb.asm.ClassVisitor;
 
 /**
  * @author whilein
  */
-public interface EntityHuman extends EntityLiving {
+public interface VisitorLinker {
 
-    @FieldGenerated
-    PlayerInventory getInventory();
+    ClassVisitor link(ClassVisitor visitor, Output output, PatchClass patch);
+
 }

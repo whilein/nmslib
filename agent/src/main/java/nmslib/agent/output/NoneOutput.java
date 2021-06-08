@@ -14,15 +14,24 @@
  *    limitations under the License.
  */
 
-package nmslib.api.nms;
+package nmslib.agent.output;
 
-import nmslib.api.annotation.FieldGenerated;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /**
  * @author whilein
  */
-public interface EntityHuman extends EntityLiving {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class NoneOutput implements Output {
 
-    @FieldGenerated
-    PlayerInventory getInventory();
+    public static final Output INSTANCE = new NoneOutput();
+
+    @Override
+    public void logClass(final byte[] bytecode, final String name) {
+    }
+
+    @Override
+    public void log(final String text) {
+    }
 }

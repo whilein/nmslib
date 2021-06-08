@@ -1,0 +1,14 @@
+class $nms.IChatBaseComponent
+  implement $api.nms.IChatBaseComponent
+
+class $nms.ChatBaseComponent
+  implement $api.nms.ChatBaseComponent
+
+class $nms.ChatComponentText
+  implement $api.nms.ChatComponentText
+
+class $nms.EnumChatFormat
+  implement $api.nms.EnumChatFormat
+
+class $nms.ChatModifier
+  implement $api.nms.ChatModifier

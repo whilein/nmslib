@@ -36,7 +36,7 @@ public interface NBTTagCompound extends NBTBase {
 
     NBTBase get(String name);
     NBTTagCompound getCompound(String name);
-    NBTTagList getList(String name);
+    NBTTagList getList(String name, int type);
 
     byte getByte(String name);
     short getShort(String name);

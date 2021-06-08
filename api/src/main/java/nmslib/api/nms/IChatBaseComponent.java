@@ -14,21 +14,19 @@
  *    limitations under the License.
  */
 
-package nmslib.agent;
+package nmslib.api.nms;
 
-import javassist.CtClass;
-import nmslib.agent.patch.proxy.ProxyRegistry;
-import nmslib.agent.version.Version;
+import java.util.List;
 
 /**
  * @author whilein
  */
-public interface AgentContext {
+public interface IChatBaseComponent extends Iterable<IChatBaseComponent> {
 
-    ProxyRegistry getProxyRegistry();
-    Version getVersion();
+    String getText();
+    ChatModifier getChatModifier();
 
-    CtClass resolve(String name);
-    CtClass getCurrent();
+    IChatBaseComponent addSibling(IChatBaseComponent sibling);
+    List<? extends IChatBaseComponent> getSiblings();
 
 }

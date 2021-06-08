@@ -14,15 +14,16 @@
  *    limitations under the License.
  */
 
-package nmslib.api.nms;
-
-import nmslib.api.annotation.FieldGenerated;
+package nmslib.api;
 
 /**
  * @author whilein
  */
-public interface EntityHuman extends EntityLiving {
+public interface Version {
 
-    @FieldGenerated
-    PlayerInventory getInventory();
+    String getName();
+
+    int getId();
+    int getProtocol();
+
 }

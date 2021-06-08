@@ -30,11 +30,11 @@ public interface NBTTagList extends NBTBase {
     int size();
     boolean isEmpty();
 
-    NBTBase get(int i);
-    NBTBase remove(int i);
+    NBTBase getElement(int i);
+    NBTBase removeElement(int i);
 
-    void set(int i, NBTBase nbt);
-    void add(NBTBase nbt);
+    void setElement(int i, NBTBase nbt);
+    void addElement(NBTBase nbt);
 
 
 }

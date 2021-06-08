@@ -16,45 +16,49 @@
 
 package nmslib.agent;
 
-import javassist.ClassPool;
-import javassist.CtClass;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Maps;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import nmslib.agent.patch.proxy.ProxyRegistry;
-import nmslib.agent.version.Version;
+import nmslib.api.ProxyRegistry;
 
 /**
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SimpleAgentContext implements AgentContext {
+public final class SimpleProxyRegistry implements ProxyRegistry {
 
-    @Getter
-    Version version;
+    BiMap<String, String> proxies;
 
-    @Getter
-    ProxyRegistry proxyRegistry;
-
-    ClassPool classPool;
-
-    @Getter
-    CtClass current;
-
-    public static AgentContext create(
-            final Version version,
-            final ProxyRegistry proxyRegistry,
-            final ClassPool classPool,
-            final CtClass current
-    ) {
-        return new SimpleAgentContext(version, proxyRegistry, classPool, current);
+    public static ProxyRegistry create() {
+        return new SimpleProxyRegistry(HashBiMap.create());
     }
 
     @Override
-    public CtClass resolve(final String name) {
-        return classPool.getOrNull(name);
+    public void addProxy(final String nmsClass, final String apiClass) {
+        this.proxies.put(nmsClass, apiClass);
     }
 
+    @Override
+    public BiMap<String, String> getProxies() {
+        return Maps.unmodifiableBiMap(HashBiMap.create(proxies));
+    }
+
+    @Override
+    public String getApi(final String name) {
+        return proxies.get(name);
+    }
+
+    @Override
+    public String getNms(final String name) {
+        return proxies.inverse().get(name);
+    }
+
+    @Override
+    public String toString() {
+        return proxies.toString();
+    }
 }

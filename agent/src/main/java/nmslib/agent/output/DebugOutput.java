@@ -14,41 +14,54 @@
  *    limitations under the License.
  */
 
-package nmslib.agent.patch.proxy;
+package nmslib.agent.output;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SimpleProxyRegistry implements ProxyRegistry {
+public final class DebugOutput implements Output {
 
-    BiMap<String, String> proxies;
+    File classes;
+    PrintStream log;
 
-    public static ProxyRegistry create() {
-        return new SimpleProxyRegistry(HashBiMap.create());
+    public static Output create() throws IOException {
+        val dir = new File("debug");
+        dir.mkdir();
+
+        val classesDir = new File(dir, "classes");
+        classesDir.mkdir();
+
+        val logFile = new File(dir, "output.log");
+
+        return new DebugOutput(classesDir, new PrintStream(logFile));
     }
 
     @Override
-    public ProxyRegistry addProxy(final String name, final String proxy) {
-        this.proxies.put(name, proxy);
-        return this;
+    public void logClass(final byte[] bytecode, final String name) {
+        val file = new File(classes, name.replace('/', '.') + ".class");
+
+        try (val fos = new FileOutputStream(file)) {
+            fos.write(bytecode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public String getProxy(final String name) {
-        val byKey = proxies.get(name);
-
-        return byKey == null
-                ? proxies.inverse().get(name)
-                : byKey;
+    public void log(final String text) {
+        log.println(text);
+        log.flush();
     }
-
 }
