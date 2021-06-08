@@ -39,6 +39,12 @@ public interface ChatClickable {
         EnumClickAction TWITCH_USER_INFO = valueOf("TWITCH_USER_INFO");
         EnumClickAction SUGGEST_COMMAND = valueOf("SUGGEST_COMMAND");
         EnumClickAction CHANGE_PAGE = valueOf("CHANGE_PAGE");
+        EnumClickAction[] VALUES = values();
+
+        @FactoryMethod
+        static EnumClickAction[] values() {
+            throw new UnsupportedOperationException();
+        }
 
         @FactoryMethod
         static EnumClickAction valueOf(final String value) {

@@ -75,6 +75,13 @@ public final class FactoryVisitorLinker implements VisitorLinker {
 
                     output.log("[nms/Factory] [" + factoryName + "] Add valueOf method which references to "
                             + produces.replace('/', '.') + "#" + name);
+                } else if (name.equals("values") && descriptor.equals("()[L" + factoryName + ";")) {
+                    method.visitMethodInsn(Opcodes.INVOKESTATIC, produces, name,
+                            "()[L" + produces + ";", false);
+                    method.visitMaxs(1, 2);
+
+                    output.log("[nms/Factory] [" + factoryName + "] Add values method which references to "
+                            + produces.replace('/', '.') + "#" + name);
                 } else {
                     val resolver = patch.getPatch().getProxyRegistry();
 

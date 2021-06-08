@@ -37,6 +37,12 @@ public interface ChatHoverable {
         EnumHoverAction SHOW_ACHIEVEMENT = valueOf("SHOW_ACHIEVEMENT");
         EnumHoverAction SHOW_ITEM = valueOf("SHOW_ITEM");
         EnumHoverAction SHOW_ENTITY = valueOf("SHOW_ENTITY");
+        EnumHoverAction[] VALUES = values();
+
+        @FactoryMethod
+        static EnumHoverAction[] values() {
+            throw new UnsupportedOperationException();
+        }
 
         @FactoryMethod
         static EnumHoverAction valueOf(final String value) {

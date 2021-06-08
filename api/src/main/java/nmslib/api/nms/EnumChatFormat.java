@@ -45,6 +45,12 @@ public interface EnumChatFormat {
     EnumChatFormat UNDERLINE = valueOf("UNDERLINE");
     EnumChatFormat ITALIC = valueOf("ITALIC");
     EnumChatFormat RESET = valueOf("RESET");
+    EnumChatFormat[] VALUES = values();
+
+    @FactoryMethod
+    static EnumChatFormat[] values() {
+        throw new UnsupportedOperationException();
+    }
 
     @FactoryMethod
     static EnumChatFormat valueOf(final String name) {
