@@ -17,7 +17,6 @@
 package nmslib;
 
 import lombok.val;
-import nmslib.api.annotation.FieldGenerated;
 import nmslib.api.cb.entity.CraftPlayer;
 import nmslib.api.hook.AgentHook;
 import nmslib.api.nms.*;
@@ -174,9 +173,6 @@ public final class Main extends JavaPlugin {
             }
 
             if (apiMethod.isBridge())
-                continue;
-
-            if (apiMethod.isAnnotationPresent(FieldGenerated.class))
                 continue;
 
             boolean fail = true;
