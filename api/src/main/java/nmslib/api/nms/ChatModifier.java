@@ -31,11 +31,20 @@ public interface ChatModifier {
     boolean isItalic();
     boolean isStrikethrough();
     boolean isUnderlined();
+    boolean isRandom();
+    String getInsertion();
+    ChatClickable getChatClickable();
+    ChatHoverable getChatHoverable();
 
     ChatModifier setColor(EnumChatFormat value);
     ChatModifier setBold(Boolean value);
     ChatModifier setItalic(Boolean value);
     ChatModifier setUnderline(Boolean value);
     ChatModifier setStrikethrough(Boolean value);
+    ChatModifier setRandom(Boolean value);
+    ChatModifier setInsertion(String value);
+    ChatModifier setChatClickable(ChatClickable click);
+    ChatModifier setChatHoverable(ChatHoverable hover);
+    ChatModifier clone();
 
 }

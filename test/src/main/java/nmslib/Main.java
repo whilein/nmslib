@@ -98,6 +98,8 @@ public final class Main extends JavaPlugin {
                 getLogger().info("NBTTagFloat: " + NBTTagFloat.create(3.5f));
                 getLogger().info("NBTTagDouble: " + NBTTagDouble.create(2.5));
                 getLogger().info("NBTTagString: " + NBTTagString.create("String Value"));
+                getLogger().info("ChatClickable: " + ChatClickable.create(ChatClickable.EnumClickAction.OPEN_URL,
+                        "http://localhost"));
                 break;
             }
             case "test-packets": {

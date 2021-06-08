@@ -12,3 +12,15 @@ class $nms.EnumChatFormat
 
 class $nms.ChatModifier
   implement $api.nms.ChatModifier
+
+class $nms.ChatClickable
+  implement $api.nms.ChatClickable
+
+class $nms.ChatClickable$EnumClickAction
+  implement $api.nms.ChatClickable$EnumClickAction
+
+class $nms.ChatHoverable
+  implement $api.nms.ChatHoverable
+
+class $nms.ChatHoverable$EnumHoverAction
+  implement $api.nms.ChatHoverable$EnumHoverAction

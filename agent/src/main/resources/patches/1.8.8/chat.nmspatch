@@ -1,2 +1,23 @@
 class $nms.IChatBaseComponent
   rename a ()Ljava/util/List; getSiblings
+
+class $nms.ChatModifier
+  rename j ()Ljava/lang/String; getInsertion
+  rename h ()L$nms/ChatClickable; getChatClickable
+  rename i ()L$nms/ChatHoverable; getChatHoverable
+
+class $nms.ChatClickable
+  rename a getAction
+  rename b getValue
+
+class $nms.ChatClickable$EnumClickAction
+  rename a ()Z isAllowFromServer
+  rename b getName
+
+class $nms.ChatHoverable
+  rename a getAction
+  rename b getValue
+
+class $nms.ChatHoverable$EnumHoverAction
+  rename a ()Z isAllowFromServer
+  rename b getName
