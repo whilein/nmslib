@@ -23,6 +23,11 @@ import nmslib.api.annotation.FieldGenerated;
  */
 public interface Entity {
 
+    String getName();
+
+    String getCustomName();
+    boolean hasCustomName();
+
     @FieldGenerated
     Entity getPassenger();
 
