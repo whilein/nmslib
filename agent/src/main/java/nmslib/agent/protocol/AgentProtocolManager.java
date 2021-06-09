@@ -44,7 +44,7 @@ public final class AgentProtocolManager implements ProtocolManager {
     }
 
     @Override
-    public <T extends Packet> RegisteredProtocolListener<T> register(
+    public <T extends Packet> RegisteredProtocolListener<T> registerListener(
             final Class<T> packetType,
             final ProtocolListener<T> listener
     ) {
@@ -74,7 +74,7 @@ public final class AgentProtocolManager implements ProtocolManager {
     }
 
     @Override
-    public void unregister(
+    public void unregisterListener(
             final RegisteredProtocolListener<?> listener
     ) {
         try {

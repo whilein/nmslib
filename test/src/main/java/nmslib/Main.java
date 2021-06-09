@@ -45,7 +45,7 @@ public final class Main extends JavaPlugin {
         getCommand("test-patchers").setExecutor(this);
         getCommand("test-enums").setExecutor(this);
 
-        NmsLib.getInstance().getProtocolManager().register(PacketPlayOutTitle.class,
+        NmsLib.getInstance().getProtocolManager().registerListener(PacketPlayOutTitle.class,
                 this::handlePacket);
     }
 
@@ -57,7 +57,7 @@ public final class Main extends JavaPlugin {
                 + ", action=" + title.getAction() + " ) were sent to " + name);
 
         if (title.getAction() == PacketPlayOutTitle.EnumTitleAction.TITLE) {
-            val newComponent = ChatComponentText.create("Fake title text");
+            val newComponent = ChatComponentText.create("Modified Title");
 
             newComponent.setChatModifier(ChatModifier.create()
                     .setColor(EnumChatFormat.GOLD));

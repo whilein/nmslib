@@ -23,11 +23,11 @@ import nmslib.api.nms.Packet;
  */
 public interface ProtocolManager {
 
-    <T extends Packet> RegisteredProtocolListener<T> register(
+    <T extends Packet> RegisteredProtocolListener<T> registerListener(
             Class<T> packetType,
             ProtocolListener<T> listener
     );
 
-    void unregister(RegisteredProtocolListener<?> listener);
+    void unregisterListener(RegisteredProtocolListener<?> listener);
 
 }
