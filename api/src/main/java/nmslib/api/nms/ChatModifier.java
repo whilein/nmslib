@@ -16,11 +16,14 @@
 
 package nmslib.api.nms;
 
+import nmslib.api.annotation.FactoryMethod;
+
 /**
  * @author whilein
  */
 public interface ChatModifier {
 
+    @FactoryMethod
     static ChatModifier create() {
         throw new UnsupportedOperationException();
     }
