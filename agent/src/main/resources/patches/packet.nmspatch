@@ -6,9 +6,17 @@ class $nms.Packet
 
 class $nms.PacketPlayOutChat
   implement $api.nms.PacketPlayOutChat
+  adapter packet-listen
 
 class $nms.PacketPlayOutTitle
   implement $api.nms.PacketPlayOutTitle
+  adapter packet-listen
+
+class $nms.PacketListener
+  implement $api.nms.PacketListener
+
+class $nms.PacketListenerPlayIn
+  implement $api.nms.PacketListenerPlayIn
 
 class $nms.PacketPlayOutTitle$EnumTitleAction
   implement $api.nms.PacketPlayOutTitle$EnumTitleAction

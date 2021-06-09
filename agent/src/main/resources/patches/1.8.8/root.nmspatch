@@ -7,3 +7,6 @@ include 1.8.8/nbt
 class $nms.ItemStack
   rename c load
   rename j getMaxDurability
+
+class $nms.PlayerConnection
+  rename a ()L$nms/NetworkManager; getNetworkManager

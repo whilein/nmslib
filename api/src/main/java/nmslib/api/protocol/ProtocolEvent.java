@@ -14,14 +14,23 @@
  *    limitations under the License.
  */
 
-package nmslib.agent;
+package nmslib.api.protocol;
 
-import nmslib.api.hook.AgentHook;
-
-import java.lang.instrument.ClassFileTransformer;
+import nmslib.api.nms.EntityPlayer;
+import nmslib.api.nms.NetworkManager;
+import nmslib.api.nms.Packet;
 
 /**
  * @author whilein
  */
-public interface ClassPatcher extends AgentHook, ClassFileTransformer {
+public interface ProtocolEvent<T extends Packet> {
+
+    void setCancelled(boolean cancelled);
+    boolean isCancelled();
+
+    T getPacket();
+    NetworkManager getNetworkManager();
+
+    EntityPlayer getPlayer();
+
 }

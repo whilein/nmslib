@@ -14,25 +14,10 @@
  *    limitations under the License.
  */
 
-package nmslib.api.hook;
-
-import nmslib.api.ProxyResolver;
-import nmslib.api.Version;
+package nmslib.api.nms;
 
 /**
  * @author whilein
  */
-public interface AgentHook {
-
-    static AgentHook getInstance() {
-        return AgentHookProvider.get();
-    }
-
-    Version getVersion();
-
-    boolean isNotSupported();
-    int getPatchesCount();
-
-    ProxyResolver getProxyResolver();
-
+public interface PacketListenerPlayIn extends PacketListener {
 }

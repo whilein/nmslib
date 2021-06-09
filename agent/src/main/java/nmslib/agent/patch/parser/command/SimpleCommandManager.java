@@ -21,10 +21,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import nmslib.agent.patch.parser.command.type.AccessorCommand;
-import nmslib.agent.patch.parser.command.type.ClassCommand;
-import nmslib.agent.patch.parser.command.type.ImplementCommand;
-import nmslib.agent.patch.parser.command.type.RenameCommand;
+import nmslib.agent.patch.parser.command.type.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -54,6 +51,7 @@ public final class SimpleCommandManager implements CommandManager {
         commandManager.add(AccessorCommand.create(AccessorCommand.GETTER | AccessorCommand.SETTER));
         commandManager.add(ClassCommand.create());
         commandManager.add(RenameCommand.create());
+        commandManager.add(AdapterCommand.create());
 
         return commandManager;
     }

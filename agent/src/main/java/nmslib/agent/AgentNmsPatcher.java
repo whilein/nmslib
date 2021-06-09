@@ -24,9 +24,12 @@ import lombok.val;
 import nmslib.agent.output.Output;
 import nmslib.agent.patch.MinecraftPatch;
 import nmslib.agent.patch.Patch;
+import nmslib.agent.patch.PatchClass;
 import nmslib.agent.patch.parser.PatchParser;
+import nmslib.agent.protocol.AgentProtocolManager;
 import nmslib.api.ProxyResolver;
 import nmslib.api.Version;
+import nmslib.api.protocol.ProtocolManager;
 
 import java.security.ProtectionDomain;
 
@@ -35,7 +38,7 @@ import java.security.ProtectionDomain;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class AgentClassPatcher implements ClassPatcher {
+public final class AgentNmsPatcher extends NmsPatcher {
 
     Patch patch;
 
@@ -48,11 +51,14 @@ public final class AgentClassPatcher implements ClassPatcher {
     @Getter
     boolean notSupported;
 
+    @Getter
+    ProtocolManager protocolManager;
+
     final PatchParser patchParser;
     final Output output;
 
-    public static ClassPatcher create(final PatchParser reader, final Output output) {
-        return new AgentClassPatcher(reader, output);
+    public static NmsPatcher create(final PatchParser reader, final Output output) {
+        return new AgentNmsPatcher(reader, output);
     }
 
     @Override
@@ -77,6 +83,11 @@ public final class AgentClassPatcher implements ClassPatcher {
                     val parsedPatch = patchParser.read("root");
                     parsedPatch.apply(patch);
 
+                    patch.forClass("net/minecraft/server/" + version + "/ServerConnection$")
+                            .injectPipeline();
+
+                    protocolManager = AgentProtocolManager.create(patch);
+
                     patchesCount = patch.countPatches();
                     notSupported = patchesCount == 0;
 
@@ -94,10 +105,19 @@ public final class AgentClassPatcher implements ClassPatcher {
                 }
             }
 
-            val patchClass = patch.get(name).orElse(null);
+
+            PatchClass patchClass = patch.get(name);
+
+            if (patchClass == null) {
+                val innerSeparator = name.indexOf('$');
+
+                if (innerSeparator != -1) {
+                    patchClass = patch.get(name.substring(0, innerSeparator + 1));
+                }
+            }
 
             if (patchClass != null) {
-                return patchClass.patch(patch.getProxyRegistry(), output, classfileBuffer);
+                return patchClass.patch(patch.getProxyRegistry(), output, name, classfileBuffer);
             }
         } catch (Exception e) {
             e.printStackTrace();

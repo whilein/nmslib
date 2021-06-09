@@ -17,9 +17,10 @@
 package nmslib;
 
 import lombok.val;
+import nmslib.api.NmsLib;
 import nmslib.api.cb.entity.CraftPlayer;
-import nmslib.api.hook.AgentHook;
 import nmslib.api.nms.*;
+import nmslib.api.protocol.ProtocolEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -43,6 +44,26 @@ public final class Main extends JavaPlugin {
         getCommand("test-factories").setExecutor(this);
         getCommand("test-patchers").setExecutor(this);
         getCommand("test-enums").setExecutor(this);
+
+        NmsLib.getInstance().getProtocolManager().register(PacketPlayOutTitle.class,
+                this::handlePacket);
+    }
+
+    private void handlePacket(final ProtocolEvent<PacketPlayOutTitle> event) {
+        val name = event.getPlayer().getName();
+        val title = event.getPacket();
+
+        getLogger().info("The title packet ( text=" + title.getComponent().getText()
+                + ", action=" + title.getAction() + " ) were sent to " + name);
+
+        if (title.getAction() == PacketPlayOutTitle.EnumTitleAction.TITLE) {
+            val newComponent = ChatComponentText.create("Fake title text");
+
+            newComponent.setChatModifier(ChatModifier.create()
+                    .setColor(EnumChatFormat.GOLD));
+
+            title.setComponent(newComponent);
+        }
     }
 
     @Override
@@ -59,7 +80,7 @@ public final class Main extends JavaPlugin {
 
         switch (label) {
             case "test-patchers": {
-                val proxies = AgentHook.getInstance().getProxyResolver().getProxies();
+                val proxies = NmsLib.getInstance().getProxyResolver().getProxies();
 
                 for (val entry : proxies.entrySet()) {
                     val key = entry.getKey();

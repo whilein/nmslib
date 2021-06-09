@@ -16,30 +16,9 @@
 
 package nmslib.api.nms;
 
-import lombok.val;
-import nmslib.api.protocol.ProtocolEvent;
-import nmslib.api.protocol.ProtocolListener;
-
-import java.util.Collections;
-import java.util.List;
-
 /**
  * @author whilein
  */
-public interface Packet {
-
-    void read(PacketDataSerializer serializer);
-    void write(PacketDataSerializer serializer);
-
-    default List<ProtocolListener<? extends Packet>> getListeners() {
-        return Collections.emptyList();
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    default void handle(final ProtocolEvent<?> event) {
-        for (val listener : getListeners()) {
-            ((ProtocolListener) listener).listen(event);
-        }
-    }
-
+public interface NetworkManager {
+    PacketListener getPacketListener();
 }

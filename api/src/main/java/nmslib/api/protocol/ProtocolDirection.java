@@ -14,32 +14,13 @@
  *    limitations under the License.
  */
 
-package nmslib.api.nms;
-
-import lombok.val;
-import nmslib.api.protocol.ProtocolEvent;
-import nmslib.api.protocol.ProtocolListener;
-
-import java.util.Collections;
-import java.util.List;
+package nmslib.api.protocol;
 
 /**
  * @author whilein
  */
-public interface Packet {
+public enum ProtocolDirection {
 
-    void read(PacketDataSerializer serializer);
-    void write(PacketDataSerializer serializer);
-
-    default List<ProtocolListener<? extends Packet>> getListeners() {
-        return Collections.emptyList();
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    default void handle(final ProtocolEvent<?> event) {
-        for (val listener : getListeners()) {
-            ((ProtocolListener) listener).listen(event);
-        }
-    }
+    TO_CLIENT, TO_SERVER
 
 }

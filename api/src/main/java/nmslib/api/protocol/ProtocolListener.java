@@ -14,28 +14,15 @@
  *    limitations under the License.
  */
 
-package nmslib.api.hook;
+package nmslib.api.protocol;
 
-import lombok.experimental.UtilityClass;
+import nmslib.api.nms.Packet;
 
 /**
  * @author whilein
  */
-@UtilityClass
-public class AgentHookProvider {
+public interface ProtocolListener<T extends Packet> {
 
-    private static AgentHook instance;
-
-    public static AgentHook get() {
-        return instance;
-    }
-
-    public static void set(AgentHook hook) {
-        if (instance != null) {
-            throw new IllegalStateException("Instance already defined");
-        }
-
-        instance = hook;
-    }
+    void listen(ProtocolEvent<T> event);
 
 }

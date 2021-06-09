@@ -23,7 +23,6 @@ import nmslib.agent.output.Output;
 import nmslib.agent.output.SoutOutput;
 import nmslib.agent.patch.parser.MinecraftPatchParser;
 import nmslib.agent.patch.resolver.ResourcePatchResolver;
-import nmslib.api.hook.AgentHookProvider;
 
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
@@ -51,7 +50,7 @@ public final class AgentMain {
             output = NoneOutput.INSTANCE;
         }
 
-        val classPatcher = AgentClassPatcher.create(
+        val classPatcher = AgentNmsPatcher.create(
                 MinecraftPatchParser.create(
                         ResourcePatchResolver.create("patches/", ".nmspatch")
                 ),
@@ -59,8 +58,6 @@ public final class AgentMain {
         );
 
         instrumentation.addTransformer(classPatcher);
-
-        AgentHookProvider.set(classPatcher);
     }
 
 }

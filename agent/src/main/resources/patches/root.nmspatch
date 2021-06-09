@@ -20,6 +20,10 @@ class $nms.PlayerInventory
 
 class $nms.PlayerConnection
   implement $api.nms.PlayerConnection
+  getter player
+
+class $nms.NetworkManager
+  implement $api.nms.NetworkManager
 
 version v1_8_R3
   include 1.8.8/root

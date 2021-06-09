@@ -19,7 +19,10 @@ package nmslib.api.nms;
 /**
  * @author whilein
  */
-public interface PlayerConnection {
+public interface PlayerConnection extends PacketListenerPlayIn {
+
+    EntityPlayer getPlayer();
+    NetworkManager getNetworkManager();
 
     void sendPacket(Packet packet);
 

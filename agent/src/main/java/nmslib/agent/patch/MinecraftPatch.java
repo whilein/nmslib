@@ -26,7 +26,6 @@ import nmslib.api.Version;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author whilein
@@ -69,8 +68,8 @@ public final class MinecraftPatch implements Patch {
     }
 
     @Override
-    public Optional<PatchClass> get(final String name) {
-        return Optional.ofNullable(classes.get(name));
+    public PatchClass get(final String name) {
+        return classes.get(name);
     }
 
 }

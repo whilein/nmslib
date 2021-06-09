@@ -19,8 +19,6 @@ package nmslib.agent.patch;
 import nmslib.api.ProxyRegistry;
 import nmslib.api.Version;
 
-import java.util.Optional;
-
 /**
  * @author whilein
  */
@@ -32,6 +30,6 @@ public interface Patch {
     Version getVersion();
 
     PatchClass forClass(String name);
-    Optional<PatchClass> get(String name);
+    PatchClass get(String name);
 
 }

@@ -64,6 +64,11 @@ public final class MinecraftPatchClass implements PatchClass {
         patch.forClass(type.getInternalName()).factory(name);
     }
 
+    @Override
+    public void adapter(final String type) {
+        addLinker(AdapterVisitorLinker.create(type));
+    }
+
     private void addLinker(final VisitorLinker visitorLinker) {
         visitorLinkers.add(visitorLinker);
     }
@@ -82,6 +87,11 @@ public final class MinecraftPatchClass implements PatchClass {
     }
 
     @Override
+    public void injectPipeline() {
+        addLinker(InjectVisitorLinker.create());
+    }
+
+    @Override
     public void factory(final String produces) {
         addLinker(FactoryVisitorLinker.create(produces));
     }
@@ -92,7 +102,8 @@ public final class MinecraftPatchClass implements PatchClass {
     }
 
     @Override
-    public byte[] patch(final ProxyResolver resolver, final Output output, final byte[] input) throws Exception {
+    public byte[] patch(final ProxyResolver resolver, final Output output, final String name, final byte[] input)
+            throws Exception {
         val reader = new ClassReader(input);
         val writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 

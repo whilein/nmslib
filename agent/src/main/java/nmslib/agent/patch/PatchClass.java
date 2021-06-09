@@ -34,12 +34,15 @@ public interface PatchClass {
     void fieldSetter(String field, String setter);
     void fieldGetter(String field, String getter);
 
+    void injectPipeline();
     void factory(String produces);
 
     void implement(Type type);
     void extend(Type type);
 
-    byte[] patch(ProxyResolver resolver, Output output, byte[] bytes) throws Exception;
+    void adapter(String type);
+
+    byte[] patch(ProxyResolver resolver, Output output, String name, byte[] bytes) throws Exception;
 
     int countPatches();
 
